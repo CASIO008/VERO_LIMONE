@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#FAF8F1" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#100F0C" media="(prefers-color-scheme: dark)" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Checkout — VERO LIMONE</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet" />
+  <script>
+    (function () {
+      try {
+        var root = document.documentElement;
+        var saved = localStorage.getItem('vl_theme');
+        if (saved === 'light' || saved === 'dark') {
+          root.dataset.theme = saved;
+          root.style.colorScheme = saved;
+        } else {
+          root.dataset.theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="ck-body">
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ============ HEADER ============ -->
+  <header class="ck-header">
+    <div class="wrap ck-header-inner">
+      <a class="brand" href="index.html" aria-label="VERO LIMONE — voltar para a loja">
+        <span class="brand-mark" data-mark></span>
+        <span class="brand-lockup" data-lockup></span>
+      </a>
+      <a class="ck-back" href="index.html">← Voltar para a loja</a>
+      <div class="ck-head-actions">
+        <span class="ck-secure">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          Compra segura
+        </span>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Alternar tema claro e escuro" aria-pressed="false">
+          <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+          <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="ck-main">
+    <div class="wrap">
+
+      <!-- ============ STEPS ============ -->
+      <ol class="ck-steps" id="ckSteps" aria-label="Etapas do checkout">
+        <li class="is-active" data-step="1"><span>1</span>Sacola</li>
+        <li data-step="2"><span>2</span>Entrega</li>
+        <li data-step="3"><span>3</span>Pagamento</li>
+        <li data-step="4"><span>4</span>Pronto</li>
+      </ol>
+
+      <div class="ck-grid">
+
+        <!-- ============ FORM COLUMN ============ -->
+        <div class="ck-form-col">
+
+          <!-- ---------- STEP 1 · SACOLA ---------- -->
+          <section class="ck-step is-active" id="step1" aria-label="Sacola">
+            <div class="ck-panel">
+              <div class="ck-panel-head">
+                <h2>Sacola <span id="ckCount">(0 itens)</span></h2>
+                <a href="index.html#colecao" class="ck-link">continuar comprando</a>
+              </div>
+              <div class="ck-items" id="ckItems"></div>
+              <div class="ck-coupon">
+                <input type="text" id="ckCoupon" placeholder="Cupom de desconto" aria-label="Cupom de desconto" />
+                <button class="btn btn-ghost" id="ckCouponBtn" type="button">Aplicar</button>
+              </div>
+              <p class="ck-coupon-msg" id="ckCouponMsg">Dica: use <strong>LIMONE10</strong> e ganhe 10% na primeira compra.</p>
+            </div>
+          </section>
+
+          <!-- ---------- STEP 2 · ENTREGA ---------- -->
+          <section class="ck-step" id="step2" aria-label="Entrega" hidden>
+            <div class="ck-panel">
+              <div class="ck-panel-head">
+                <h2>Entrega</h2>
+                <button class="ck-link" id="backTo1" type="button">← editar sacola</button>
+              </div>
+
+              <div class="ck-fields">
+                <label class="ck-field">
+                  <span>Nome completo</span>
+                  <input type="text" id="ckName" autocomplete="name" placeholder="Seu nome e sobrenome" />
+                  <small class="ck-error"></small>
+                </label>
+
+                <div class="ck-row">
+                  <label class="ck-field">
+                    <span>E-mail</span>
+                    <input type="email" id="ckEmail" autocomplete="email" placeholder="voce@email.com" />
+                    <small class="ck-error"></small>
+                  </label>
+                  <label class="ck-field">
+                    <span>Telefone / WhatsApp</span>
+                    <input type="tel" id="ckPhone" autocomplete="tel" placeholder="(00) 00000-0000" />
+                    <small class="ck-error"></small>
+                  </label>
+                </div>
+
+                <div class="ck-row ck-row-3">
+                  <label class="ck-field">
+                    <span>CEP</span>
+                    <input type="text" id="ckCep" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" />
+                    <small class="ck-error"></small>
+                  </label>
+                  <label class="ck-field ck-grow">
+                    <span>Endereço</span>
+                    <input type="text" id="ckAddress" autocomplete="street-address" placeholder="Rua, avenida…" />
+                    <small class="ck-error"></small>
+                  </label>
+                  <label class="ck-field ck-narrow">
+                    <span>Número</span>
+                    <input type="text" id="ckNumber" inputmode="numeric" placeholder="123" />
+                    <small class="ck-error"></small>
+                  </label>
+                </div>
+
+                <div class="ck-row">
+                  <label class="ck-field">
+                    <span>Complemento <em>(opcional)</em></span>
+                    <input type="text" id="ckComp" placeholder="Apto, bloco…" />
+                    <small class="ck-error"></small>
+                  </label>
+                  <label class="ck-field">
+                    <span>Bairro</span>
+                    <input type="text" id="ckDistrict" placeholder="Seu bairro" />
+                    <small class="ck-error"></small>
+                  </label>
+                </div>
+
+                <div class="ck-row ck-row-3">
+                  <label class="ck-field ck-grow">
+                    <span>Cidade</span>
+                    <input type="text" id="ckCity" autocomplete="address-level2" placeholder="Cidade" />
+                    <small class="ck-error"></small>
+                  </label>
+                  <label class="ck-field ck-narrow">
+                    <span>UF</span>
+                    <input type="text" id="ckUf" maxlength="2" placeholder="SP" />
+                    <small class="ck-error"></small>
+                  </label>
+                </div>
+              </div>
+
+              <h3 class="ck-sub">Forma de envio</h3>
+              <div class="ck-ship" role="radiogroup" aria-label="Forma de envio" id="ckShipOpts">
+                <label class="ck-ship-opt is-active">
+                  <input type="radio" name="ship" value="standard" checked />
+                  <span class="ck-ship-info">
+                    <strong>Padrão</strong>
+                    <em id="ckShipEta">5 a 8 dias úteis</em>
+                  </span>
+                  <span class="ck-ship-price" id="ckShipPrice">R$ 19,90</span>
+                </label>
+                <label class="ck-ship-opt">
+                  <input type="radio" name="ship" value="express" />
+                  <span class="ck-ship-info">
+                    <strong>Expresso</strong>
+                    <em id="ckExprEta">2 a 3 dias úteis</em>
+                  </span>
+                  <span class="ck-ship-price">R$ 34,90</span>
+                </label>
+              </div>
+            </div>
+            <div class="ck-actions">
+              <button class="btn btn-ghost" id="backTo1b" type="button">← Voltar</button>
+              <button class="btn btn-dark" id="toStep3" type="button">Continuar para pagamento <span class="arr">→</span></button>
+            </div>
+          </section>
+
+          <!-- ---------- STEP 3 · PAGAMENTO ---------- -->
+          <section class="ck-step" id="step3" aria-label="Pagamento" hidden>
+            <div class="ck-panel">
+              <div class="ck-panel-head">
+                <h2>Pagamento</h2>
+                <button class="ck-link" id="backTo2" type="button">← editar entrega</button>
+              </div>
+
+              <div class="ck-pay" role="radiogroup" aria-label="Forma de pagamento" id="ckPayOpts">
+
+                <label class="ck-pay-opt is-active">
+                  <input type="radio" name="pay" value="pix" checked />
+                  <span class="ck-pay-info">
+                    <strong>Pix <span class="ck-tag">5% off</span></strong>
+                    <em>Aprovação imediata</em>
+                  </span>
+                  <span class="ck-pay-ico" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l4 4-4 4-4-4 4-4Z"/><path d="M12 13l4 4-4 4-4-4 4-4Z"/><path d="M7 8l-4 4 4 4M17 8l4 4-4 4"/></svg>
+                  </span>
+                </label>
+                <div class="ck-pay-panel" data-panel="pix">
+                  <div class="ck-pix">
+                    <div class="ck-qr" id="ckQr" aria-hidden="true"></div>
+                    <p><strong>Escaneie o QR Code no app do seu banco.</strong><br/>O desconto de 5% já está aplicado no resumo ao lado. Este QR é demonstrativo.</p>
+                  </div>
+                </div>
+
+                <label class="ck-pay-opt">
+                  <input type="radio" name="pay" value="card" />
+                  <span class="ck-pay-info">
+                    <strong>Cartão de crédito</strong>
+                    <em>Até 6x sem juros</em>
+                  </span>
+                  <span class="ck-pay-ico" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18M7 15h4"/></svg>
+                  </span>
+                </label>
+                <div class="ck-pay-panel" data-panel="card" hidden>
+                  <div class="ck-fields">
+                    <label class="ck-field">
+                      <span>Número do cartão</span>
+                      <input type="text" id="ckCardNum" inputmode="numeric" placeholder="0000 0000 0000 0000" autocomplete="cc-number" />
+                      <small class="ck-error"></small>
+                    </label>
+                    <label class="ck-field">
+                      <span>Nome impresso no cartão</span>
+                      <input type="text" id="ckCardName" placeholder="COMO ESTÁ NO CARTÃO" autocomplete="cc-name" />
+                      <small class="ck-error"></small>
+                    </label>
+                    <div class="ck-row ck-row-3">
+                      <label class="ck-field">
+                        <span>Validade</span>
+                        <input type="text" id="ckCardExp" inputmode="numeric" placeholder="MM/AA" autocomplete="cc-exp" />
+                        <small class="ck-error"></small>
+                      </label>
+                      <label class="ck-field ck-narrow">
+                        <span>CVV</span>
+                        <input type="text" id="ckCardCvv" inputmode="numeric" placeholder="123" autocomplete="cc-csc" />
+                        <small class="ck-error"></small>
+                      </label>
+                      <label class="ck-field ck-grow">
+                        <span>Parcelas</span>
+                        <select id="ckInstallments"></select>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <label class="ck-pay-opt">
+                  <input type="radio" name="pay" value="boleto" />
+                  <span class="ck-pay-info">
+                    <strong>Boleto bancário</strong>
+                    <em>Vence em até 3 dias úteis</em>
+                  </span>
+                  <span class="ck-pay-ico" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5v14M8 5v14M12 5v10M16 5v14M20 5v14"/></svg>
+                  </span>
+                </label>
+                <div class="ck-pay-panel" data-panel="boleto" hidden>
+                  <p class="ck-boleto">Geramos o boleto após a confirmação e enviamos para o seu e-mail. A liberação do pedido acontece em até 2 dias úteis após o pagamento.</p>
+                </div>
+
+              </div>
+            </div>
+            <div class="ck-actions">
+              <button class="btn btn-ghost" id="backTo2b" type="button">← Voltar</button>
+              <button class="btn btn-dark" id="ckConfirm" type="button">Finalizar pedido <span class="arr">→</span></button>
+            </div>
+          </section>
+
+          <!-- ---------- STEP 4 · PRONTO ---------- -->
+          <section class="ck-step" id="step4" aria-label="Pedido confirmado" hidden>
+            <div class="ck-panel ck-success">
+              <div class="ck-check" aria-hidden="true">
+                <svg viewBox="0 0 52 52"><circle class="ck-check-circle" cx="26" cy="26" r="24" fill="none"/><path class="ck-check-mark" fill="none" d="M14 27l8 8 16-17"/></svg>
+              </div>
+              <h2>Pedido confirmado!</h2>
+              <p>Recebemos seu pedido <strong id="ckOrderId">VL-2026-0000</strong> e você vai receber as atualizações por e-mail.</p>
+              <div class="ck-success-sum" id="ckSuccessSum"></div>
+              <div class="ck-actions center">
+                <a class="btn btn-dark" href="index.html#colecao">Voltar para a loja <span class="arr">→</span></a>
+                <a class="btn ck-whats" id="ckWhatsFinal" href="#" target="_blank" rel="noopener">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.7-1.3 1.3-1.9 1.4-.5.1-1.1.1-1.8-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4.2.5.7 1.8.8 1.9.1.1.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.1-.3.3-.1.6.1.3.7 1.2 1.6 1.9 1.1.9 2 1.2 2.2 1.3.3.1.4.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.8.8.3.1.4.2.5.3.1.2.1.8-.1 1.4Z"/></svg>
+                  Acompanhar pelo WhatsApp
+                </a>
+              </div>
+              <p class="ck-success-note">Obrigado por vestir VERO LIMONE.</p>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- ============ SUMMARY ============ -->
+        <aside class="ck-summary" aria-label="Resumo do pedido">
+          <div class="ck-sum-card">
+            <h3>Resumo do pedido</h3>
+            <div class="ck-sum-items" id="ckSumItems"></div>
+            <dl class="ck-sum-totals" id="ckSumTotals"></dl>
+            <button class="btn btn-dark full" id="ckMainBtn" type="button">Continuar <span class="arr">→</span></button>
+            <a class="btn ck-whats full" id="ckWhats" href="#" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.7-1.3 1.3-1.9 1.4-.5.1-1.1.1-1.8-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4.2.5.7 1.8.8 1.9.1.1.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.1-.3.3-.1.6.1.3.7 1.2 1.6 1.9 1.1.9 2 1.2 2.2 1.3.3.1.4.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.8.8.3.1.4.2.5.3.1.2.1.8-.1 1.4Z"/></svg>
+              Pedir pelo WhatsApp
+            </a>
+            <ul class="ck-trust">
+              <li>Frete grátis acima de R$ 199</li>
+              <li>Troca em até 7 dias · análise em 5 dias úteis</li>
+              <li>Prata 925 livre de chumbo e zinco</li>
+            </ul>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="ck-footer">
+    <div class="wrap">
+      <span>© 2026 VERO LIMONE</span>
+      <span>Ambiente demonstrativo — nenhum pagamento é processado.</span>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"><span></span></div>
+
+  <script src="data.js"></script>
+  <script src="checkout.js"></script>
+  <script src="vendor/gsap.min.js"></script>
+  <script src="vendor/ScrollTrigger.min.js"></script>
+  <script src="theme.js"></script>
+  <script src="motion.js"></script>
+</body>
+</html>

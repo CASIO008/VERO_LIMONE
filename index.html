@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#FAF8F1" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#100F0C" media="(prefers-color-scheme: dark)" />
+  <meta name="color-scheme" content="light dark" />
+  <title>VERO LIMONE — Street Basics</title>
+  <meta name="description" content="VERO LIMONE é streetwear basics unissex: camisetas, moletons, jeans, shorts e acessórios em prata 925 livre de chumbo e zinco. Feito para durar" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet" />
+  <script>
+    (function () {
+      try {
+        var root = document.documentElement;
+        var saved = localStorage.getItem('vl_theme');
+        if (saved === 'light' || saved === 'dark') {
+          root.dataset.theme = saved;
+          root.style.colorScheme = saved;
+        } else {
+          root.dataset.theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css" />
+  <noscript><style>.loader{display:none !important} body.is-loading{overflow:auto !important} .reveal{opacity:1 !important;transform:none !important} .split .word>span{transform:none !important}</style></noscript>
+</head>
+<body class="is-loading">
+
+  <!-- ============ LOADER ============ -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader-inner">
+      <div class="loader-mark" data-mark></div>
+      <p class="loader-word">VERO&nbsp;LIMONE</p>
+    </div>
+  </div>
+
+  <!-- ============ PROGRESS ============ -->
+  <div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header" id="header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#top" aria-label="VERO LIMONE — início">
+        <span class="brand-mark" data-mark></span>
+        <span class="brand-lockup" data-lockup></span>
+      </a>
+
+      <nav class="main-nav" aria-label="Navegação principal">
+        <a href="#colecao">Coleção</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#qualidade">Qualidade</a>
+        <a href="#lookbook">Lookbook</a>
+        <a href="#contato">Contato</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Alternar tema claro e escuro" aria-pressed="false">
+          <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+          <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+        </button>
+        <button class="cart-btn" id="cartBtn" aria-label="Abrir carrinho">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H8.8a1.6 1.6 0 0 1-1.6-1.4L6 8Z"/><path d="M9 10V6.5a3 3 0 0 1 6 0V10"/></svg>
+          <span class="cart-count zero" id="cartCount">0</span>
+        </button>
+        <button class="burger" id="burger" aria-label="Abrir menu" aria-expanded="false">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ MOBILE MENU ============ -->
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div class="mobile-mark" data-mark></div>
+    <nav aria-label="Menu">
+      <a href="#colecao" data-mm>Coleção</a>
+      <a href="#sobre" data-mm>Sobre</a>
+      <a href="#qualidade" data-mm>Qualidade</a>
+      <a href="#lookbook" data-mm>Lookbook</a>
+      <a href="#contato" data-mm>Contato</a>
+    </nav>
+    <div class="mobile-foot">
+      <span>@verolimone</span>
+      <span>street basics · unissex</span>
+    </div>
+  </div>
+
+  <main id="main">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="top">
+      <div class="hero-bg" aria-hidden="true">
+        <span class="aurora"></span>
+        <span class="glow g1"></span>
+        <span class="glow g2"></span>
+      </div>
+
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow reveal">Nova coleção · Verão 2026</p>
+          <h1 class="hero-title" data-split>Street basics, feitos para durar</h1>
+          <p class="hero-sub reveal">Camisetas, moletons, jeans e acessórios em algodão premium e prata 925 — peças unissex para o dia a dia, do rolê ao treino.</p>
+          <div class="hero-cta reveal">
+            <a href="#colecao" class="btn btn-dark">Explorar coleção <span class="arr">→</span></a>
+            <a href="#sobre" class="btn btn-ghost">Conhecer a marca</a>
+          </div>
+          <p class="hero-note reveal">Frete grátis acima de R$ 199 · Troca ou arrependimento em até 7 dias</p>
+        </div>
+
+        <div class="hero-stage reveal" id="heroStage">
+          <div class="stage-mark" id="stageMark" data-mark></div>
+
+          <div class="stage-product" id="stageProduct">
+            <div class="stage-blob" id="stageBlob" aria-hidden="true"></div>
+            <div class="stage-garment" id="stageGarment"></div>
+            <div class="stage-info">
+              <span class="stage-name">Hoodie Puff Print · toque para ver</span>
+              <span class="stage-price" id="stagePrice">R$ 269,00</span>
+            </div>
+          </div>
+
+          <span class="float-tag t1">Algodão premium</span>
+          <span class="float-tag t2">Unissex</span>
+          <span class="float-tag t3">Prata 925 · sem chumbo e zinco</span>
+        </div>
+      </div>
+
+      <div class="wrap">
+        <ul class="stats reveal" aria-label="Números da marca">
+          <li><strong data-count="38" data-suffix="k+">0</strong><span>clientes satisfeitos</span></li>
+          <li><strong data-count="4.9" data-decimals="1">0</strong><span>nota média de avaliação</span></li>
+          <li><strong data-count="48" data-suffix="h">0</strong><span>para sair do ateliê</span></li>
+          <li><strong data-count="7" data-suffix="d">0</strong><span>para trocar ou se arrepender</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ MARQUEE ============ -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <div class="marquee-group">
+          <span>VERO LIMONE</span><i class="mq-mark" data-mark data-size="20"></i>
+          <span>STREET BASICS</span><i class="mq-mark" data-mark data-size="20"></i>
+          <span>UNISSEX</span><i class="mq-mark" data-mark data-size="20"></i>
+          <span>FEITO PARA DURAR</span><i class="mq-mark" data-mark data-size="20"></i>
+        </div>
+        <div class="marquee-group">
+          <span>VERO LIMONE</span><i class="mq-mark" data-mark data-size="20"></i>
+          <span>STREET BASICS</span><i class="mq-mark" data-mark data-size="20"></i>
+          <span>UNISSEX</span><i class="mq-mark" data-mark data-size="20"></i>
+          <span>FEITO PARA DURAR</span><i class="mq-mark" data-mark data-size="20"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ COLEÇÃO ============ -->
+    <section class="collection section" id="colecao">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow reveal">A coleção</p>
+            <h2 class="section-title" data-split>Essenciais da estação</h2>
+          </div>
+          <p class="section-sub reveal">Da camiseta à jaqueta, do jeans ao anel de prata — peças unissex pensadas para durar, servir e acompanhar o seu ritmo.</p>
+        </div>
+
+        <div class="filters reveal" id="filters" role="group" aria-label="Filtrar produtos">
+          <button class="chip" data-filter="all">Todos</button>
+          <button class="chip is-active" data-filter="camisetas">Camisetas</button>
+          <button class="chip" data-filter="moletons">Moletons</button>
+          <button class="chip" data-filter="jaquetas">Jaquetas</button>
+          <button class="chip" data-filter="calcas">Calças</button>
+          <button class="chip" data-filter="shorts">Shorts</button>
+          <button class="chip" data-filter="underwear">Underwear</button>
+          <button class="chip" data-filter="acessorios">Acessórios</button>
+        </div>
+
+        <div class="grid" id="grid"></div>
+      </div>
+    </section>
+
+    <!-- ============ SOBRE ============ -->
+    <section class="about section" id="sobre">
+      <div class="wrap about-grid">
+        <div class="about-visual reveal">
+          <div class="about-blob" aria-hidden="true"></div>
+          <div class="about-mark" data-mark></div>
+          <div class="about-card">
+            <strong>1.000+</strong>
+            <span>horas de teste de modelagem</span>
+          </div>
+          <div class="about-card two">
+            <strong>925</strong>
+            <span>prata genuína nas joias, livre de chumbo e zinco</span>
+          </div>
+        </div>
+
+        <div class="about-copy">
+          <p class="eyebrow reveal">A marca</p>
+          <h2 class="section-title" data-split>Básico, honesto e unissex.</h2>
+          <p class="reveal">A VERO LIMONE nasceu para vestir todo mundo: peças unissex que unem conforto de verdade e acabamento impecável. Camisetas, moletons, jeans e acessórios desenvolvidos em tecidos nobres, com costuras reforçadas e modelagem testada em corpos reais.</p>
+          <p class="reveal">Produzimos em pequenos lotes, com controle de qualidade peça a peça — e nossas joias são em prata 925, livre de chumbo e zinco, seguras para o uso diário.</p>
+          <ul class="about-list">
+            <li class="reveal">Modelagem unissex testada em corpos reais</li>
+            <li class="reveal">Costuras reforçadas ponto por ponto</li>
+            <li class="reveal">Prata 925 livre de chumbo e zinco</li>
+            <li class="reveal">Tecidos certificados e de baixo impacto</li>
+          </ul>
+          <a class="btn btn-dark reveal" href="#lookbook">Ver lookbook <span class="arr">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ QUALIDADE ============ -->
+    <section class="features section" id="qualidade">
+      <div class="wrap">
+        <div class="section-head center">
+          <p class="eyebrow reveal">Qualidade</p>
+          <h2 class="section-title" data-split>Por que dura tanto</h2>
+        </div>
+
+        <div class="features-grid">
+          <article class="feature reveal">
+            <span class="feature-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20c8.5 0 15-6.5 15-15 0 0-8.5-1.2-12 2.3S4 20 4 20Z"/><path d="M5.5 18.5C8.5 13 12.5 9.6 17 7.5"/></svg>
+            </span>
+            <h3>Algodão premium</h3>
+            <p>Fibra longa, toque macio e durabilidade que não desbota no primeiro verão.</p>
+          </article>
+
+          <article class="feature reveal">
+            <span class="feature-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2 6.2L20.5 11 14 12.8 12 19l-2-6.2L3.5 11 10 9.2 12 3Z"/></svg>
+            </span>
+            <h3>Elastano de memória</h3>
+            <p>Do treino ao rolê: estica, respira e volta à forma original a cada lavagem.</p>
+          </article>
+
+          <article class="feature reveal">
+            <span class="feature-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12l-1.5 6L20 12l-3.5 3L18 21H6l1.5-6L4 12l3.5-3L6 3Z"/><path d="M12 8.5 13.2 11 16 11.4l-2 1.9.5 2.7L12 14.8 9.5 16l.5-2.7-2-1.9 2.8-.4L12 8.5Z"/></svg>
+            </span>
+            <h3>Prata 925 segura</h3>
+            <p>Joias em prata genuína livres de chumbo e zinco — hipoalergênicas, para usar todo dia.</p>
+          </article>
+
+          <article class="feature reveal">
+            <span class="feature-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6.5 6.8 6.5 11.2A6.5 6.5 0 0 1 12 20.7a6.5 6.5 0 0 1-6.5-6.5C5.5 9.8 12 3 12 3Z"/><path d="M9.5 14.5a2.5 2.5 0 0 0 2.5 2.5"/></svg>
+            </span>
+            <h3>Cores que resistem</h3>
+            <p>Tingimento fixado com tecnologia que mantém a cor viva por muito mais tempo.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LOOKBOOK ============ -->
+    <section class="lookbook section" id="lookbook">
+      <div class="wrap section-head">
+        <div>
+          <p class="eyebrow reveal">Lookbook 2026</p>
+          <h2 class="section-title" data-split>Movimento</h2>
+        </div>
+        <div class="lb-nav reveal">
+          <button class="lb-btn" id="lbPrev" aria-label="Anterior">←</button>
+          <button class="lb-btn" id="lbNext" aria-label="Próximo">→</button>
+        </div>
+      </div>
+      <div class="lb-track" id="lbTrack"></div>
+      <p class="lb-hint">Arraste para explorar</p>
+    </section>
+
+    <!-- ============ DEPOIMENTOS ============ -->
+    <section class="reviews section">
+      <div class="wrap">
+        <div class="section-head center">
+          <p class="eyebrow reveal">Depoimentos</p>
+          <h2 class="section-title" data-split>Quem veste, indica</h2>
+        </div>
+
+        <div class="reviews-grid">
+          <figure class="review reveal">
+            <div class="stars" aria-label="5 de 5 estrelas">★★★★★</div>
+            <blockquote>A camiseta é macia demais e o corte reto é exatamente o que eu procurava. Preço justo pelo que entrega — virei cliente fiel.</blockquote>
+            <figcaption><strong>Lucas M.</strong><span>Compra verificada · São Paulo</span></figcaption>
+          </figure>
+
+          <figure class="review reveal">
+            <div class="stars" aria-label="5 de 5 estrelas">★★★★★</div>
+            <blockquote>Comprei o hoodie e o anel de prata 925. Qualidade absurda, chegou rápido e a prata não escureceu nem irritou a pele.</blockquote>
+            <figcaption><strong>Camila R.</strong><span>Compra verificada · Curitiba</span></figcaption>
+          </figure>
+
+          <figure class="review reveal">
+            <div class="stars" aria-label="5 de 5 estrelas">★★★★★</div>
+            <blockquote>Jeans com caimento perfeito, shorts jeans então… peças unissex que servem de verdade. Já estou no terceiro pedido.</blockquote>
+            <figcaption><strong>Rafael T.</strong><span>Compra verificada · Recife</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ INSTAGRAM ============ -->
+    <section class="instagram section" id="instagram">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow reveal">Comunidade</p>
+            <h2 class="section-title" data-split>Siga @verolimone</h2>
+          </div>
+          <p class="section-sub reveal">Bastidores, lançamentos e looks reais de quem veste VERO LIMONE. Marque a gente para aparecer por aqui.</p>
+        </div>
+
+        <div class="ig-grid" id="igGrid"></div>
+
+        <div class="ig-cta reveal">
+          <button class="btn btn-dark" id="igBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+            Ver o Instagram <span class="arr">→</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ NEWSLETTER ============ -->
+    <section class="newsletter section" id="contato">
+      <div class="wrap">
+        <div class="news-card reveal">
+          <div class="news-mark" data-mark data-blob="#191813" data-chevron="#191813" data-dash="#191813" data-curve="#191813"></div>
+          <div class="news-copy">
+            <p class="eyebrow">Lista Limone</p>
+            <h2>Ganhe 10% na primeira compra.</h2>
+            <p>Novidades, lançamentos e ofertas antes de todo mundo — direto no seu e-mail.</p>
+          </div>
+          <form class="news-form" id="newsForm" novalidate>
+            <input type="email" id="newsEmail" name="email" placeholder="seu@email.com" autocomplete="email" required aria-label="Seu e-mail" />
+            <button class="btn btn-dark" type="submit">Quero meu cupom</button>
+          </form>
+          <p class="news-note" id="newsNote">Sem spam. Você pode sair da lista quando quiser.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div class="footer-brand">
+        <span class="footer-mark" data-mark></span>
+        <div>
+          <span class="brand-lockup footer-lockup" data-lockup></span>
+          <p>Street basics unissex, feitos para durar — do rolê ao treino.</p>
+        </div>
+      </div>
+
+      <nav class="footer-col" aria-label="Loja">
+        <h4>Loja</h4>
+        <a href="#colecao">Todos os produtos</a>
+        <a href="#colecao">Camisetas</a>
+        <a href="#colecao">Moletons</a>
+        <a href="#colecao">Calças</a>
+        <a href="#colecao">Acessórios</a>
+      </nav>
+
+      <nav class="footer-col" aria-label="Ajuda">
+        <h4>Ajuda</h4>
+        <a href="#contato">Trocas e devoluções</a>
+        <a href="#contato">Guia de tamanhos</a>
+        <a href="#contato">Frete e prazos</a>
+        <a href="#contato">Fale com a gente</a>
+      </nav>
+
+      <nav class="footer-col" aria-label="Ateliê">
+        <h4>Ateliê</h4>
+        <a href="#sobre">Sobre a marca</a>
+        <a href="#qualidade">Nossos tecidos</a>
+        <a href="#qualidade">Prata 925</a>
+        <a href="#lookbook">Lookbook</a>
+      </nav>
+
+      <div class="footer-col social" aria-label="Redes sociais">
+        <h4>Social</h4>
+        <a href="#instagram">Instagram</a>
+        <a href="#contato">TikTok</a>
+        <a href="#contato">Pinterest</a>
+      </div>
+    </div>
+
+    <div class="wrap footer-bottom">
+      <span>© 2026 VERO LIMONE. Todos os direitos reservados.</span>
+      <span>Feito com limão e cuidado.</span>
+    </div>
+  </footer>
+
+  <!-- ============ CARRINHO ============ -->
+  <div class="scrim" id="scrim"></div>
+  <aside class="cart" id="cart" aria-hidden="true" aria-label="Carrinho de compras">
+    <header class="cart-head">
+      <h3>Seu carrinho <span id="cartHeadCount">(0)</span></h3>
+      <button class="icon-x" id="cartClose" aria-label="Fechar carrinho">✕</button>
+    </header>
+
+    <div class="cart-body" id="cartBody"></div>
+
+    <footer class="cart-foot">
+      <div class="ship">
+        <div class="ship-bar"><i id="shipFill"></i></div>
+        <p id="shipMsg">Faltam R$ 199,00 para o frete grátis.</p>
+      </div>
+      <div class="cart-total">
+        <span>Subtotal</span>
+        <strong id="cartTotal">R$ 0,00</strong>
+      </div>
+      <button class="btn btn-dark full" id="checkoutBtn">Finalizar compra</button>
+      <p class="cart-note">Frete e cupons calculados no checkout. Pix com 5% de desconto.</p>
+    </footer>
+  </aside>
+
+  <!-- ============ QUICK VIEW ============ -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Detalhes do produto">
+    <div class="modal-card">
+      <button class="icon-x modal-close" id="modalClose" aria-label="Fechar">✕</button>
+
+      <div class="modal-media" id="modalMedia">
+        <div class="stage-blob" id="modalBlob" aria-hidden="true"></div>
+        <div class="modal-garment" id="modalGarment"></div>
+      </div>
+
+      <div class="modal-info">
+        <p class="eyebrow" id="modalCat">Camisetas</p>
+        <h3 id="modalName">Camiseta Box</h3>
+        <div class="modal-price-line">
+          <p class="modal-price" id="modalPrice">R$ 99,00</p>
+          <span class="pix-hint">5% off no Pix</span>
+        </div>
+        <p class="modal-desc" id="modalDesc"></p>
+
+        <div class="opt">
+          <span class="opt-label">Cor: <em id="modalColorName">Cru</em></span>
+          <div class="swatches" id="modalSwatches" role="group" aria-label="Escolher cor"></div>
+        </div>
+
+        <div class="opt">
+          <span class="opt-label">Tamanho</span>
+          <div class="sizes" id="modalSizes" role="group" aria-label="Escolher tamanho"></div>
+        </div>
+
+        <div class="modal-actions">
+          <div class="qty" aria-label="Quantidade">
+            <button id="qtyMinus" aria-label="Diminuir">−</button>
+            <span id="qtyVal">1</span>
+            <button id="qtyPlus" aria-label="Aumentar">+</button>
+          </div>
+          <button class="btn btn-dark full" id="modalAdd">Adicionar ao carrinho</button>
+        </div>
+
+        <ul class="modal-meta" id="modalMeta"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ TOAST ============ -->
+  <div class="toast" id="toast" role="status" aria-live="polite"><span></span></div>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+  <script src="vendor/gsap.min.js"></script>
+  <script src="vendor/ScrollTrigger.min.js"></script>
+  <script src="theme.js"></script>
+  <script src="motion.js"></script>
+</body>
+</html>
