@@ -1,93 +1,158 @@
 /* ============================================================
-   VERO LIMONE — loja (home)
+   DAVVERO LIMONE — loja (home)
    Depende de data.js (marca, catálogo, ilustrações, carrinho)
    ============================================================ */
 'use strict';
 
 /* ---------------- estado ---------------- */
 const state = {
-  filter: 'camisetas',
+  filter: 'all',
+  gender: 'homem',
+  sort: 'relevancia',
   colorOf: {},
   cart: loadCart()
 };
 PRODUCTS.forEach(p => { state.colorOf[p.id] = p.colors[0]; });
 
 const productById = id => PRODUCTS.find(p => p.id === id);
-const sizesOf = p => (p.cat === 'acessorios' ? ['Único'] : SIZES);
-const defaultSize = p => (p.cat === 'acessorios' ? 'Único' : 'M');
+
+/* ---------------- vitrine por público ----------------
+   Peças marcadas como 'ambos' aparecem nos dois departamentos,
+   sem nunca exibir o rótulo "unissex" na interface.            */
+const servesGender = (p, g) => p.publico === g || p.publico === 'ambos';
+const inGender = g => PRODUCTS.filter(p => servesGender(p, g));
+const isNew = p => p.badge === 'Novo';
+const countFor = (g, cat) => inGender(g).filter(p => p.cat === cat).length;
+
+function listFor() {
+  const base = inGender(state.gender);
+  let list;
+  if (state.filter === 'all') list = base;
+  else if (state.filter === 'novo') list = base.filter(isNew);
+  else list = base.filter(p => p.cat === state.filter);
+
+  const arr = list.slice();
+  if (state.sort === 'menor') arr.sort((a, b) => a.price - b.price);
+  else if (state.sort === 'maior') arr.sort((a, b) => b.price - a.price);
+  else if (state.sort === 'novidades') arr.sort((a, b) => (isNew(b) ? 1 : 0) - (isNew(a) ? 1 : 0));
+  return arr;
+}
 
 /* ---------------- grid de produtos ---------------- */
-function badgeHTML(badge) {
-  if (!badge) return '';
-  const cls = badge === 'Best-seller' ? 'best' : (badge === 'Prata 925' ? 'silver' : '');
-  return `<span class="card-badge ${cls}">${badge}</span>`;
-}
-
-function priceHTML(p) {
-  return `${p.oldPrice ? `<s>${brl(p.oldPrice)}</s>` : ''}${brl(p.price)}`;
-}
-
-function cardHTML(p, i) {
-  const ck  = state.colorOf[p.id];
-  const hex = COLORS[ck].hex;
-  const hasPhoto = p.photos && p.photos.length;
-
-  const tile = p.tile ? COLORS[p.tile].hex : '#EAE6D6';
-  const media = hasPhoto
-    ? `<img class="card-photo" src="${p.photos[0]}" alt="${p.name}" loading="lazy" decoding="async">
-       ${p.photos[1] ? `<img class="card-photo alt" src="${p.photos[1]}" alt="" loading="lazy" decoding="async">` : ''}`
-    : `<div class="card-garment">${garmentSVG(p.type, CREAM_GARMENT)}</div>`;
-
-  const mediaClass = hasPhoto
-    ? 'has-photo'
-    : `is-illustrated ${luma(tile) > 150 ? 'on-light' : 'on-dark'}`;
-  const mediaStyle = hasPhoto ? '' : ` style="--tile:${tile}"`;
-
-  const photosLabel = p.photos && p.photos.length > 1 ? ' · ' + p.photos.length + ' fotos' : '';
-  const colorsRow = `<span class="color-label"><i style="background:${hex}"></i>${p.colorLabel || COLORS[ck].name}${photosLabel}</span>`;
-
-  return `<article class="card" style="animation-delay:${i * 55}ms" data-id="${p.id}">
-    <div class="card-media ${mediaClass}"${mediaStyle} data-open>
-      ${badgeHTML(p.badge)}
-      <span class="card-index">${String(i + 1).padStart(2, '0')}</span>
-      ${media}
-      <div class="card-quick">
-        <button class="quick-view" data-open>Espiar</button>
-        <button class="quick-add" data-add aria-label="Adicionar ${p.name} ao carrinho">+</button>
-      </div>
-    </div>
-    <div class="card-info">
-      ${colorsRow}
-      <h3>${p.name}</h3>
-      <p class="card-meta">${p.meta}</p>
-      <p class="card-price">${priceHTML(p)}<span class="pix-hint">5% off no Pix</span></p>
-    </div>
-  </article>`;
-}
+/* o card vive em data.js (productCardHTML) — a home só escolhe a cor */
+const cardHTML = (p, i) => productCardHTML(p, i, state.colorOf[p.id]);
 
 function renderGrid() {
-  const list = state.filter === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.cat === state.filter);
+  const list = listFor();
   const grid = $('#grid');
-  grid.innerHTML = list.map((p, i) => cardHTML(p, i)).join('');
+  grid.innerHTML = list.length
+    ? list.map((p, i) => cardHTML(p, i)).join('')
+    : `<p class="grid-empty">Nada por aqui neste departamento ainda — tente outra categoria.</p>`;
 
   $$('.card', grid).forEach(card => {
     const id = card.dataset.id;
     const p  = productById(id);
 
-    $('.card-media', card).addEventListener('click', () => openModal(id));
+    $('.card-media', card).addEventListener('click', e => {
+      if (e.target.closest('a') || e.target.closest('[data-add]')) return;
+      location.href = 'produto.html?id=' + encodeURIComponent(id);
+    });
 
     $('[data-add]', card).addEventListener('click', e => {
+      e.preventDefault();
       e.stopPropagation();
-      addToCart(id, state.colorOf[id], defaultSize(p), 1);
+      const size = preferredSize(p);
+      addToCart(id, state.colorOf[id], size, 1, true);
     });
   });
 }
 
-$$('#filters .chip').forEach(chip => chip.addEventListener('click', () => {
-  $$('#filters .chip').forEach(c => c.classList.toggle('is-active', c === chip));
-  state.filter = chip.dataset.filter;
+/* ---------------- vitrine de categorias (cards) ---------------- */
+function renderCats() {
+  const wrap = $('#catGrid');
+  if (!wrap) return;
+  wrap.innerHTML = CATS.map(c => {
+    const n = countFor(state.gender, c.id);
+    return `<a class="cat-card" href="#colecao" data-cat="${c.id}">
+      <span class="cat-media"><img src="${c.photo}" alt="" loading="lazy" decoding="async"></span>
+      <span class="cat-body">
+        <span class="cat-name">${c.label}</span>
+        <span class="cat-count">${n} ${n === 1 ? 'peça' : 'peças'}</span>
+        <span class="cat-tag">${c.tagline}</span>
+      </span>
+    </a>`;
+  }).join('');
+}
+
+/* ---------------- controles da coleção ---------------- */
+function syncCollection() {
+  $$('#genderTabs .gender-tab').forEach(t => {
+    const on = t.dataset.gender === state.gender;
+    t.classList.toggle('is-active', on);
+    t.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+
+  const eyebrow = $('#collectionEyebrow');
+  if (eyebrow) eyebrow.textContent = GENDER_LABEL[state.gender];
+
+  $$('#filters .chip').forEach(c => {
+    const f = c.dataset.filter;
+    const n = f === 'all'  ? inGender(state.gender).length
+            : f === 'novo' ? inGender(state.gender).filter(isNew).length
+            : countFor(state.gender, f);
+    c.hidden = n === 0;
+    c.classList.toggle('is-active', f === state.filter);
+  });
+
+  const count = $('#collectionCount');
+  if (count) {
+    const n = listFor().length;
+    count.textContent = `${n} ${n === 1 ? 'peça' : 'peças'}`;
+  }
+
+  $$('[data-gender-link]').forEach(a => {
+    a.classList.toggle('is-active', a.dataset.genderLink === state.gender);
+  });
+}
+
+function setGender(g) {
+  if (g !== 'homem' && g !== 'mulher') return;
+  state.gender = g;
+  const exists = state.filter === 'all' || state.filter === 'novo' || countFor(g, state.filter) > 0;
+  if (!exists) state.filter = 'all';
+  renderGrid(); renderCats(); syncCollection();
+}
+
+function setFilter(f) {
+  state.filter = f;
+  renderGrid(); syncCollection();
+}
+
+$$('#filters .chip').forEach(chip => chip.addEventListener('click', () => setFilter(chip.dataset.filter)));
+$$('#genderTabs .gender-tab').forEach(tab => tab.addEventListener('click', () => setGender(tab.dataset.gender)));
+
+const sortSel = $('#sortSelect');
+if (sortSel) sortSel.addEventListener('change', () => {
+  state.sort = sortSel.value;
   renderGrid();
-}));
+});
+
+document.addEventListener('click', e => {
+  const cat = e.target.closest('[data-cat]');
+  if (cat) {
+    e.preventDefault();
+    setFilter(cat.dataset.cat);
+    const sec = $('#colecao');
+    if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+  const g = e.target.closest('[data-gender-link]');
+  if (g) setGender(g.dataset.genderLink);
+  const c = e.target.closest('[data-cat-link]');
+  if (c) setFilter(c.dataset.catLink);
+  const n = e.target.closest('[data-new-link]');
+  if (n) setFilter('novo');
+});
 
 /* ---------------- hero ---------------- */
 const HERO = { id: 'hoodie-puff', colors: ['limone', 'coral', 'laranja', 'preto'], idx: 0, timer: null };
@@ -100,6 +165,11 @@ function renderHero(colorKey) {
     ? `<img class="stage-photo" src="${p.photos[0]}" alt="${p.name}" decoding="async">`
     : garmentSVG(p.type, CREAM_GARMENT);
   $('#stagePrice').textContent = brl(p.price);
+  const old = $('#stageOldPrice');
+  if (old) {
+    old.textContent = p.oldPrice ? brl(p.oldPrice) : '';
+    old.hidden = !p.oldPrice;
+  }
 }
 
 (function heroInit() {
@@ -113,99 +183,17 @@ function renderHero(colorKey) {
   HERO.timer = setInterval(next, 3600);
   stage.addEventListener('mouseenter', () => { clearInterval(HERO.timer); HERO.timer = null; });
   stage.addEventListener('mouseleave', () => { if (!HERO.timer) HERO.timer = setInterval(next, 3600); });
-  product.addEventListener('click', () => openModal(HERO.id));
+  const visit = () => { location.href = 'produto.html?id=' + encodeURIComponent(HERO.id); };
+  product.addEventListener('click', visit);
+  product.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); visit(); } });
+  product.setAttribute('role', 'link');
+  product.setAttribute('tabindex', '0');
   product.style.cursor = 'pointer';
   renderHero(HERO.colors[0]);
 })();
 
-/* ---------------- quick view ---------------- */
-const modalState = { id: null, color: null, size: 'M', qty: 1, photo: 0 };
-
-function openModal(id) {
-  const p = productById(id);
-  modalState.id = id;
-  modalState.color = state.colorOf[id];
-  modalState.size = defaultSize(p);
-  modalState.qty = 1;
-  modalState.photo = 0;
-  renderModal();
-  $('#modal').classList.add('open');
-  $('#modal').setAttribute('aria-hidden', 'false');
-  document.body.classList.add('no-scroll');
-}
-function closeModal() {
-  $('#modal').classList.remove('open');
-  $('#modal').setAttribute('aria-hidden', 'true');
-  if (!$('#cart').classList.contains('open')) document.body.classList.remove('no-scroll');
-}
-function renderModal() {
-  const p = productById(modalState.id);
-  if (!p) return;
-  const hex = COLORS[modalState.color].hex;
-  const hasPhoto = p.photos && p.photos.length;
-
-  $('#modalCat').textContent   = CAT_LABEL[p.cat];
-  $('#modalName').textContent  = p.name;
-  $('#modalPrice').innerHTML   = priceHTML(p);
-  $('#modalDesc').textContent  = p.desc;
-  $('#modalMedia').classList.toggle('has-photo', hasPhoto);
-  $('#modalMedia').classList.toggle('fit-cover', p.fit === 'cover');
-
-  if (hasPhoto) {
-    const photo = p.photos[modalState.photo] || p.photos[0];
-    $('#modalMedia').classList.remove('is-illustrated');
-    $('#modalGarment').classList.remove('is-illustrated');
-    $('#modalBlob').hidden = true;
-    $('#modalGarment').innerHTML = `
-      <img class="modal-photo" src="${photo}" alt="${p.name}" decoding="async">
-      ${p.photos.length > 1 ? `<div class="modal-thumbs">${p.photos.map((src, k) =>
-        `<button class="modal-thumb ${k === modalState.photo ? 'is-active' : ''}" data-photo="${k}" aria-label="Foto ${k + 1}"><img src="${src}" alt=""></button>`).join('')}</div>` : ''}`;
-    $('#modalGarment').classList.add('has-photo');
-    $('#modalColorName').textContent = p.colorLabel || COLORS[modalState.color].name;
-    $('#modalSwatches').innerHTML = `<span class="color-label"><i style="background:${hex}"></i></span>`;
-    $$('#modalGarment .modal-thumb').forEach(b => b.addEventListener('click', () => {
-      modalState.photo = +b.dataset.photo;
-      renderModal();
-    }));
-  } else {
-    const tile = p.tile ? COLORS[p.tile].hex : '#EAE6D6';
-    $('#modalBlob').hidden = true;
-    $('#modalGarment').classList.remove('has-photo');
-    $('#modalMedia').classList.add('is-illustrated');
-    $('#modalMedia').style.setProperty('--tile', tile);
-    $('#modalGarment').classList.add('is-illustrated');
-    $('#modalGarment').innerHTML = garmentSVG(p.type, CREAM_GARMENT);
-    $('#modalColorName').textContent = p.colorLabel || COLORS[modalState.color].name;
-    $('#modalSwatches').innerHTML = `<span class="color-label"><i style="background:${hex}"></i></span>`;
-  }
-
-  const sizes = sizesOf(p);
-  $('#modalSizes').innerHTML = sizes.map(s =>
-    `<button class="size ${s === modalState.size ? 'is-active' : ''}" data-size="${s}">${s}</button>`
-  ).join('');
-  $('#qtyVal').textContent = modalState.qty;
-  $('#modalMeta').innerHTML = (p.specs || [])
-    .concat(['Frete grátis acima de R$ 199', 'Troca ou arrependimento em até 7 dias'])
-    .map(t => `<li>${t}</li>`).join('');
-
-  $$('#modalSizes .size').forEach(b => b.addEventListener('click', () => {
-    modalState.size = b.dataset.size;
-    renderModal();
-  }));
-}
-
-$('#modalClose').addEventListener('click', closeModal);
-$('#modal').addEventListener('click', e => { if (e.target === $('#modal')) closeModal(); });
-$('#qtyMinus').addEventListener('click', () => { modalState.qty = Math.max(1, modalState.qty - 1); $('#qtyVal').textContent = modalState.qty; });
-$('#qtyPlus').addEventListener('click',  () => { modalState.qty = Math.min(9, modalState.qty + 1); $('#qtyVal').textContent = modalState.qty; });
-$('#modalAdd').addEventListener('click', () => {
-  addToCart(modalState.id, modalState.color, modalState.size, modalState.qty);
-  closeModal();
-  openCart();
-});
-
 /* ---------------- carrinho ---------------- */
-function addToCart(id, colorKey, size, qty) {
+function addToCart(id, colorKey, size, qty, usedPref) {
   const p = productById(id);
   if (!p) return;
   const key = `${id}|${colorKey}|${size}`;
@@ -213,9 +201,10 @@ function addToCart(id, colorKey, size, qty) {
   if (found) found.qty += qty;
   else state.cart.push({ key, id, color: colorKey, size, qty, price: p.price });
   saveCart(state.cart);
+  if (usedPref) rememberSize(p.cat, size);
   renderCart();
   bumpBadge();
-  toast(`${p.name} · ${COLORS[colorKey].name} (${size}) adicionado`);
+  toast(`${p.name} · Tam. ${size}${usedPref ? ' (seu tamanho)' : ''} adicionado ao carrinho`);
 }
 
 function renderCart() {
@@ -306,7 +295,7 @@ function closeCart() {
   $('#cart').classList.remove('open');
   $('#cart').setAttribute('aria-hidden', 'true');
   $('#scrim').classList.remove('show');
-  if (!$('#modal').classList.contains('open')) document.body.classList.remove('no-scroll');
+  document.body.classList.remove('no-scroll');
 }
 
 $('#cartBtn').addEventListener('click', openCart);
@@ -328,21 +317,15 @@ function toast(msg) {
 }
 
 /* ---------------- lookbook ---------------- */
-const LOOKS = [
-  { img: 'images/look-street-2.jpg',        title: 'Look 01', sub: 'Oversized total' },
-  { img: 'images/camiseta-washed-1.jpg',    title: 'Look 02', sub: 'Washed & layered' },
-  { img: 'images/look-street-1.jpg',        title: 'Look 03', sub: 'Cinza & baggy' },
-  { img: 'images/calca-cargo-corduroy.jpg', title: 'Look 04', sub: 'Cargo chumbo' },
-  { img: 'images/calca-jeans-baggy.jpg',    title: 'Look 05', sub: 'Denim baggy' },
-  { img: 'images/pulseira-kit-1.webp',      title: 'Look 06', sub: 'Prata 925 no pulso' }
-];
-
+/* os looks vivem em data.js (LOOKS) — cada card abre a página do look */
 function renderLookbook() {
-  $('#lbTrack').innerHTML = LOOKS.map(l => `
-    <div class="lb-item">
+  const track = $('#lbTrack');
+  if (!track) return;
+  track.innerHTML = LOOKS.map(l => `
+    <a class="lb-item" href="look.html?id=${l.id}" aria-label="${l.title}: ${l.sub}">
       <img src="${l.img}" alt="${l.sub}" loading="lazy" decoding="async">
       <div class="lb-cap">${l.title}<span>${l.sub}</span></div>
-    </div>`).join('');
+    </a>`).join('');
 }
 function lbScroll(dir) {
   const track = $('#lbTrack');
@@ -399,7 +382,7 @@ const IG = [
   { img: 'images/camiseta-washed-2.jpg',    cap: 'Washed print',       pos: 'center 28%' },
   { img: 'images/pulseira-kit-1.webp',      cap: 'Prata no pulso',     pos: 'center 50%' },
   { img: 'images/calca-cargo-corduroy.jpg', cap: 'Cargo chumbo',       pos: 'center 30%' },
-  { img: 'images/jaqueta-sherpa.jpg',       cap: 'Sherpa Vero',        pos: 'center 40%' },
+  { img: 'images/jaqueta-sherpa.jpg',       cap: 'Sherpa Davvero',     pos: 'center 40%' },
   { img: 'images/anel-wings-2.webp',        cap: 'Wings 925',          pos: 'center 45%' },
   { img: 'images/shorts-cargo.jpg',         cap: 'Shorts cargo',       pos: 'center 45%' },
   { img: 'images/look-street-2.jpg',        cap: 'Look completo',      pos: 'center 12%' }
@@ -413,7 +396,7 @@ function renderInstagram() {
   grid.innerHTML = IG.map(p => `
     <button class="ig-item" type="button" style="--pos:${p.pos}" aria-label="Foto do Instagram: ${p.cap}">
       <img src="${p.img}" alt="${p.cap}" loading="lazy" decoding="async">
-      <span class="ig-overlay">${IG_ICON}<em>@verolimone</em></span>
+      <span class="ig-overlay">${IG_ICON}<em>@davverolimone</em></span>
     </button>`).join('');
   $$('.ig-item', grid).forEach(b =>
     b.addEventListener('click', () => toast('Nosso Instagram está chegando — em breve!')));
@@ -428,6 +411,8 @@ let lastY = window.scrollY;
 window.addEventListener('scroll', () => {
   const y = window.scrollY;
   header.classList.toggle('scrolled', y > 24);
+  const billboard = $('.billboard');
+  header.classList.toggle('over-media', !!billboard && y < billboard.offsetHeight - 96);
   if (y > lastY && y > 380 && !$('#mobileMenu').classList.contains('open')) {
     header.classList.add('hidden');
   } else {
@@ -438,6 +423,7 @@ window.addEventListener('scroll', () => {
   const h = document.documentElement.scrollHeight - window.innerHeight;
   $('#progressBar').style.width = (h > 0 ? Math.min(100, (y / h) * 100) : 0) + '%';
 }, { passive: true });
+window.dispatchEvent(new Event('scroll'));
 
 /* ---------------- menu mobile ---------------- */
 const burger = $('#burger');
@@ -456,8 +442,7 @@ $$('[data-mm]').forEach(a => a.addEventListener('click', () => toggleMenu(false)
 /* ---------------- esc ---------------- */
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
-  if ($('#modal').classList.contains('open')) closeModal();
-  else if ($('#cart').classList.contains('open')) closeCart();
+  if ($('#cart').classList.contains('open')) closeCart();
   else if (mobileMenu.classList.contains('open')) toggleMenu(false);
 });
 
@@ -571,8 +556,71 @@ $('#newsForm').addEventListener('submit', e => {
   setTimeout(finish, 3500);
 })();
 
+/* ---------------- busca ---------------- */
+(function searchInit() {
+  const box = $('#search');
+  const input = $('#searchInput');
+  const results = $('#searchResults');
+  const sugg = $('#searchSugg');
+  if (!box || !input) return;
+
+  const openSearch = () => {
+    box.classList.add('open');
+    box.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('no-scroll');
+    window.setTimeout(() => input.focus(), 120);
+  };
+  const closeSearch = () => {
+    box.classList.remove('open');
+    box.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('no-scroll');
+  };
+
+  const cats = ['camisetas', 'moletons', 'jaquetas', 'calcas', 'shorts', 'acessorios'];
+  sugg.innerHTML = `<span class="search-sugg-label">Populares</span>` +
+    cats.map(c => `<button class="search-chip" type="button" data-q="${CAT_LABEL[c]}">${CAT_LABEL[c]}</button>`).join('');
+
+  function render() {
+    const term = input.value.trim();
+    const q = norm(term);
+    if (!q) { results.innerHTML = ''; return; }
+    const list = PRODUCTS.filter(p =>
+      norm(p.name + ' ' + p.meta + ' ' + (p.colorLabel || '') + ' ' + CAT_LABEL[p.cat]).includes(q)
+    ).slice(0, 8);
+
+    results.innerHTML = list.length
+      ? list.map(p => {
+          const photo = p.photos && p.photos[0];
+          return `<a class="search-item" href="produto.html?id=${encodeURIComponent(p.id)}">
+            <span class="search-thumb">${photo ? `<img src="${photo}" alt="" decoding="async">` : ''}</span>
+            <span class="search-info">
+              <span class="search-cat">${CAT_LABEL[p.cat]}</span>
+              <span class="search-name">${p.name}</span>
+            </span>
+            <span class="search-price">${brl(p.price)}</span>
+          </a>`;
+        }).join('')
+      : `<p class="search-empty">Nada encontrado para “${term}”.</p>`;
+  }
+
+  input.addEventListener('input', render);
+  sugg.addEventListener('click', e => {
+    const b = e.target.closest('[data-q]');
+    if (!b) return;
+    input.value = b.dataset.q;
+    render();
+    input.focus();
+  });
+  $('#searchBtn').addEventListener('click', openSearch);
+  $('#searchClose').addEventListener('click', closeSearch);
+  box.addEventListener('click', e => { if (e.target === box) closeSearch(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSearch(); });
+})();
+
 /* ---------------- init ---------------- */
 renderGrid();
+renderCats();
+syncCollection();
 renderCart();
 renderLookbook();
 renderInstagram();

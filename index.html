@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#FAF8F1" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#100F0C" media="(prefers-color-scheme: dark)" />
   <meta name="color-scheme" content="light dark" />
-  <title>VERO LIMONE — Street Basics</title>
-  <meta name="description" content="VERO LIMONE é streetwear basics unissex: camisetas, moletons, jeans, shorts e acessórios em prata 925 livre de chumbo e zinco. Feito para durar" />
+  <title>DAVVERO LIMONE — Street Basics</title>
+  <meta name="description" content="DAVVERO LIMONE é streetwear basics: camisetas, moletons, jeans, shorts e acessórios em prata 925 livre de chumbo e zinco. Peças masculinas e femininas, feitas para durar" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -35,7 +35,7 @@
   <div class="loader" id="loader" aria-hidden="true">
     <div class="loader-inner">
       <div class="loader-mark" data-mark></div>
-      <p class="loader-word">VERO&nbsp;LIMONE</p>
+      <p class="loader-word">DAVVERO&nbsp;LIMONE</p>
     </div>
   </div>
 
@@ -45,21 +45,34 @@
 
   <!-- ============ HEADER ============ -->
   <header class="site-header" id="header">
+    <div class="announce">
+      <div class="wrap announce-inner">
+        <span>Frete grátis acima de R$ 199</span>
+        <span class="announce-dot" aria-hidden="true">•</span>
+        <span>5% off no Pix</span>
+        <span class="announce-dot" aria-hidden="true">•</span>
+        <span>Troca em até 7 dias</span>
+      </div>
+    </div>
+
     <div class="wrap header-inner">
-      <a class="brand" href="#top" aria-label="VERO LIMONE — início">
+      <button class="burger" id="burger" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span>
+      </button>
+
+      <a class="brand brand--center" href="#top" aria-label="DAVVERO LIMONE — início">
         <span class="brand-mark" data-mark></span>
         <span class="brand-lockup" data-lockup></span>
       </a>
 
-      <nav class="main-nav" aria-label="Navegação principal">
-        <a href="#colecao">Coleção</a>
-        <a href="#sobre">Sobre</a>
-        <a href="#qualidade">Qualidade</a>
-        <a href="#lookbook">Lookbook</a>
-        <a href="#contato">Contato</a>
-      </nav>
-
       <div class="header-actions">
+        <a class="search-btn acc-btn" id="accountBtn" href="conta.html" aria-label="Minha conta" title="Minha conta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.4" r="3.6"/><path d="M4.8 20a7.2 7.2 0 0 1 14.4 0"/></svg>
+          <span class="acc-dot" id="accountDot" hidden aria-hidden="true"></span>
+        </a>
+        <button class="search-btn" id="searchBtn" type="button" aria-label="Buscar produtos">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-3.6-3.6"/></svg>
+        </button>
         <button class="theme-toggle" id="themeToggle" type="button" aria-label="Alternar tema claro e escuro" aria-pressed="false">
           <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
           <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
@@ -67,9 +80,6 @@
         <button class="cart-btn" id="cartBtn" aria-label="Abrir carrinho">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H8.8a1.6 1.6 0 0 1-1.6-1.4L6 8Z"/><path d="M9 10V6.5a3 3 0 0 1 6 0V10"/></svg>
           <span class="cart-count zero" id="cartCount">0</span>
-        </button>
-        <button class="burger" id="burger" aria-label="Abrir menu" aria-expanded="false">
-          <span></span><span></span>
         </button>
       </div>
     </div>
@@ -79,22 +89,70 @@
   <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
     <div class="mobile-mark" data-mark></div>
     <nav aria-label="Menu">
-      <a href="#colecao" data-mm>Coleção</a>
-      <a href="#sobre" data-mm>Sobre</a>
-      <a href="#qualidade" data-mm>Qualidade</a>
+      <a href="homem.html" data-mm>Masculino</a>
+      <a href="mulher.html" data-mm>Feminino</a>
+      <a href="#colecao" data-mm data-cat-link="acessorios">Acessórios</a>
+      <a href="#colecao" data-mm data-new-link>Novidades</a>
+      <a href="sobre.html" data-mm>Sobre</a>
       <a href="#lookbook" data-mm>Lookbook</a>
-      <a href="#contato" data-mm>Contato</a>
+      <a href="conta.html" data-mm>Minha conta</a>
+      <a href="contato.html" data-mm>Contato</a>
     </nav>
     <div class="mobile-foot">
-      <span>@verolimone</span>
-      <span>street basics · unissex</span>
+      <span>@davverolimone</span>
+      <span>street basics · masculino e feminino</span>
+    </div>
+  </div>
+
+  <!-- ============ BUSCA ============ -->
+  <div class="search" id="search" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Buscar produtos">
+    <button class="icon-x search-close" id="searchClose" type="button" aria-label="Fechar busca">✕</button>
+    <div class="search-inner">
+      <p class="search-eyebrow">Busca</p>
+      <label class="search-label" for="searchInput">O que você procura?</label>
+      <input class="search-input" id="searchInput" type="search" placeholder="Camiseta, moletom, jeans, anel…" autocomplete="off" spellcheck="false" />
+      <div class="search-sugg" id="searchSugg"></div>
+      <div class="search-results" id="searchResults"></div>
     </div>
   </div>
 
   <main id="main">
+    <!-- ============ VITRINE (nova coleção) ============ -->
+    <section class="billboard" id="top">
+      <div class="billboard-media" aria-hidden="true">
+        <img src="images/hero-street.jpg" alt="" fetchpriority="high" decoding="async" />
+      </div>
+      <div class="billboard-copy">
+        <p class="billboard-title">Verão<span class="apos">’</span>26</p>
+        <p class="billboard-sub">Agora disponível</p>
+      </div>
+    </section>
 
-    <!-- ============ HERO ============ -->
-    <section class="hero" id="top">
+    <!-- ============ PARA ELES / PARA ELAS ============ -->
+    <section class="duo" id="departamentos" aria-label="Compre por departamento">
+      <article class="duo-card reveal">
+        <img class="duo-img" src="images/look-street-2.jpg" alt="Look streetwear masculino" loading="lazy" decoding="async" />
+        <div class="duo-veil" aria-hidden="true"></div>
+        <div class="duo-copy">
+          <h2 class="duo-title">Para <strong>Eles</strong></h2>
+          <p class="duo-sub">Uma seleção de peças para quem transforma roupa em identidade.</p>
+          <a class="btn btn-media" href="homem.html">Descubra</a>
+        </div>
+      </article>
+
+      <article class="duo-card reveal">
+        <img class="duo-img" src="images/camiseta-washed-1.jpg" alt="Look streetwear feminino" loading="lazy" decoding="async" />
+        <div class="duo-veil" aria-hidden="true"></div>
+        <div class="duo-copy">
+          <h2 class="duo-title">Para <strong>Elas</strong></h2>
+          <p class="duo-sub">Explore a nossa linha de streetwear feminino. Moda urbana e atitude.</p>
+          <a class="btn btn-media" href="mulher.html">Descubra</a>
+        </div>
+      </article>
+    </section>
+
+    <!-- ============ HERO ANTERIOR (mantido abaixo do destaque) ============ -->
+    <section class="hero" id="destaque">
       <div class="hero-bg" aria-hidden="true">
         <span class="aurora"></span>
         <span class="glow g1"></span>
@@ -105,7 +163,7 @@
         <div class="hero-copy">
           <p class="eyebrow reveal">Nova coleção · Verão 2026</p>
           <h1 class="hero-title" data-split>Street basics, feitos para durar</h1>
-          <p class="hero-sub reveal">Camisetas, moletons, jeans e acessórios em algodão premium e prata 925 — peças unissex para o dia a dia, do rolê ao treino.</p>
+          <p class="hero-sub reveal">Camisetas, moletons, jeans e acessórios em algodão premium e prata 925 — peças para o dia a dia, do rolê ao treino.</p>
           <div class="hero-cta reveal">
             <a href="#colecao" class="btn btn-dark">Explorar coleção <span class="arr">→</span></a>
             <a href="#sobre" class="btn btn-ghost">Conhecer a marca</a>
@@ -116,17 +174,19 @@
         <div class="hero-stage reveal" id="heroStage">
           <div class="stage-mark" id="stageMark" data-mark></div>
 
+          <span class="stage-flag">✷ Best-seller</span>
+
           <div class="stage-product" id="stageProduct">
             <div class="stage-blob" id="stageBlob" aria-hidden="true"></div>
             <div class="stage-garment" id="stageGarment"></div>
             <div class="stage-info">
               <span class="stage-name">Hoodie Puff Print · toque para ver</span>
-              <span class="stage-price" id="stagePrice">R$ 269,00</span>
+              <span class="stage-price"><s id="stageOldPrice">R$ 319,00</s> <strong id="stagePrice">R$ 269,00</strong></span>
             </div>
           </div>
 
           <span class="float-tag t1">Algodão premium</span>
-          <span class="float-tag t2">Unissex</span>
+          <span class="float-tag t2">P ao GG</span>
           <span class="float-tag t3">Prata 925 · sem chumbo e zinco</span>
         </div>
       </div>
@@ -141,38 +201,76 @@
       </div>
     </section>
 
+    <!-- ============ DEGRADÊ PARA A FAIXA ============ -->
+    <div class="to-black" aria-hidden="true"></div>
+
     <!-- ============ MARQUEE ============ -->
     <div class="marquee" aria-hidden="true">
       <div class="marquee-track">
         <div class="marquee-group">
-          <span>VERO LIMONE</span><i class="mq-mark" data-mark data-size="20"></i>
+          <span>DAVVERO LIMONE</span><i class="mq-mark" data-mark data-size="20"></i>
           <span>STREET BASICS</span><i class="mq-mark" data-mark data-size="20"></i>
-          <span>UNISSEX</span><i class="mq-mark" data-mark data-size="20"></i>
+          <span>NOVA COLEÇÃO</span><i class="mq-mark" data-mark data-size="20"></i>
           <span>FEITO PARA DURAR</span><i class="mq-mark" data-mark data-size="20"></i>
         </div>
         <div class="marquee-group">
-          <span>VERO LIMONE</span><i class="mq-mark" data-mark data-size="20"></i>
+          <span>DAVVERO LIMONE</span><i class="mq-mark" data-mark data-size="20"></i>
           <span>STREET BASICS</span><i class="mq-mark" data-mark data-size="20"></i>
-          <span>UNISSEX</span><i class="mq-mark" data-mark data-size="20"></i>
+          <span>NOVA COLEÇÃO</span><i class="mq-mark" data-mark data-size="20"></i>
           <span>FEITO PARA DURAR</span><i class="mq-mark" data-mark data-size="20"></i>
         </div>
       </div>
     </div>
+
+    <!-- ============ CATEGORIAS ============ -->
+    <section class="categories section" id="categorias">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow reveal">Navegue por</p>
+            <h2 class="section-title" data-split>Compre por categoria</h2>
+          </div>
+          <p class="section-sub reveal">Escolha o segmento e vá direto às peças — do básico ao acessório.</p>
+        </div>
+
+        <div class="cat-grid reveal" id="catGrid"></div>
+      </div>
+    </section>
 
     <!-- ============ COLEÇÃO ============ -->
     <section class="collection section" id="colecao">
       <div class="wrap">
         <div class="section-head">
           <div>
-            <p class="eyebrow reveal">A coleção</p>
+            <p class="eyebrow reveal" id="collectionEyebrow">Masculino</p>
             <h2 class="section-title" data-split>Essenciais da estação</h2>
           </div>
-          <p class="section-sub reveal">Da camiseta à jaqueta, do jeans ao anel de prata — peças unissex pensadas para durar, servir e acompanhar o seu ritmo.</p>
+          <p class="section-sub reveal">Da camiseta à jaqueta, do jeans ao anel de prata — peças pensadas para durar, servir e acompanhar o seu ritmo.</p>
+        </div>
+
+        <div class="collection-tools reveal">
+          <div class="gender-tabs" id="genderTabs" role="group" aria-label="Escolher departamento">
+            <button class="gender-tab is-active" type="button" data-gender="homem" aria-pressed="true">Masculino</button>
+            <button class="gender-tab" type="button" data-gender="mulher" aria-pressed="false">Feminino</button>
+          </div>
+          <div class="collection-right">
+            <span class="collection-count" id="collectionCount">19 peças</span>
+            <label class="sort-wrap">
+              <span class="sort-label">Ordenar</span>
+              <select class="sort-select" id="sortSelect" aria-label="Ordenar produtos">
+                <option value="relevancia">Relevância</option>
+                <option value="novidades">Novidades</option>
+                <option value="menor">Menor preço</option>
+                <option value="maior">Maior preço</option>
+              </select>
+            </label>
+          </div>
         </div>
 
         <div class="filters reveal" id="filters" role="group" aria-label="Filtrar produtos">
-          <button class="chip" data-filter="all">Todos</button>
-          <button class="chip is-active" data-filter="camisetas">Camisetas</button>
+          <button class="chip is-active" data-filter="all">Todos</button>
+          <button class="chip" data-filter="novo">Novidades</button>
+          <button class="chip" data-filter="camisetas">Camisetas</button>
           <button class="chip" data-filter="moletons">Moletons</button>
           <button class="chip" data-filter="jaquetas">Jaquetas</button>
           <button class="chip" data-filter="calcas">Calças</button>
@@ -203,16 +301,13 @@
 
         <div class="about-copy">
           <p class="eyebrow reveal">A marca</p>
-          <h2 class="section-title" data-split>Básico, honesto e unissex.</h2>
-          <p class="reveal">A VERO LIMONE nasceu para vestir todo mundo: peças unissex que unem conforto de verdade e acabamento impecável. Camisetas, moletons, jeans e acessórios desenvolvidos em tecidos nobres, com costuras reforçadas e modelagem testada em corpos reais.</p>
-          <p class="reveal">Produzimos em pequenos lotes, com controle de qualidade peça a peça — e nossas joias são em prata 925, livre de chumbo e zinco, seguras para o uso diário.</p>
-          <ul class="about-list">
-            <li class="reveal">Modelagem unissex testada em corpos reais</li>
-            <li class="reveal">Costuras reforçadas ponto por ponto</li>
-            <li class="reveal">Prata 925 livre de chumbo e zinco</li>
-            <li class="reveal">Tecidos certificados e de baixo impacto</li>
-          </ul>
-          <a class="btn btn-dark reveal" href="#lookbook">Ver lookbook <span class="arr">→</span></a>
+          <h2 class="section-title" data-split>Street basics, feitos para durar.</h2>
+          <p class="reveal">A DAVVERO LIMONE nasceu para vestir todo mundo: peças que unem conforto de verdade e acabamento impecável — camisetas, moletons, jeans e acessórios em prata 925, produzidos em pequenos lotes e com controle de qualidade peça a peça.</p>
+          <p class="reveal">Quer saber como a marca começou? A história completa, o jeito de fazer e os bastidores do ateliê estão na página Sobre.</p>
+          <div class="about-cta reveal">
+            <a class="btn btn-dark" href="sobre.html">Conhecer a história <span class="arr">→</span></a>
+            <a class="btn btn-ghost" href="#lookbook">Ver lookbook</a>
+          </div>
         </div>
       </div>
     </section>
@@ -300,7 +395,7 @@
 
           <figure class="review reveal">
             <div class="stars" aria-label="5 de 5 estrelas">★★★★★</div>
-            <blockquote>Jeans com caimento perfeito, shorts jeans então… peças unissex que servem de verdade. Já estou no terceiro pedido.</blockquote>
+            <blockquote>Jeans com caimento perfeito, shorts jeans então… peças que servem de verdade. Já estou no terceiro pedido.</blockquote>
             <figcaption><strong>Rafael T.</strong><span>Compra verificada · Recife</span></figcaption>
           </figure>
         </div>
@@ -313,9 +408,9 @@
         <div class="section-head">
           <div>
             <p class="eyebrow reveal">Comunidade</p>
-            <h2 class="section-title" data-split>Siga @verolimone</h2>
+            <h2 class="section-title" data-split>Siga @davverolimone</h2>
           </div>
-          <p class="section-sub reveal">Bastidores, lançamentos e looks reais de quem veste VERO LIMONE. Marque a gente para aparecer por aqui.</p>
+          <p class="section-sub reveal">Bastidores, lançamentos e looks reais de quem veste DAVVERO LIMONE. Marque a gente para aparecer por aqui.</p>
         </div>
 
         <div class="ig-grid" id="igGrid"></div>
@@ -333,7 +428,7 @@
     <section class="newsletter section" id="contato">
       <div class="wrap">
         <div class="news-card reveal">
-          <div class="news-mark" data-mark data-blob="#191813" data-chevron="#191813" data-dash="#191813" data-curve="#191813"></div>
+          <div class="news-mark" data-mark data-mono="#191813"></div>
           <div class="news-copy">
             <p class="eyebrow">Lista Limone</p>
             <h2>Ganhe 10% na primeira compra.</h2>
@@ -350,6 +445,30 @@
 
   </main>
 
+  <!-- ============ CONFIANÇA ============ -->
+  <section class="trustbar" aria-label="Vantagens de comprar na DAVVERO LIMONE">
+    <div class="wrap trustbar-grid">
+      <div class="trust-item">
+        <span class="trust-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.6"/><circle cx="17" cy="17.5" r="1.6"/></svg>
+        </span>
+        <div><strong>Frete grátis</strong><span>Acima de R$ 199 para todo o Brasil</span></div>
+      </div>
+      <div class="trust-item">
+        <span class="trust-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.4 3 7.7 7 9 4-1.3 7-4.6 7-9V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+        </span>
+        <div><strong>Compra segura</strong><span>Pix com 5% off e cartão em até 12x</span></div>
+      </div>
+      <div class="trust-item">
+        <span class="trust-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+        </span>
+        <div><strong>Troca fácil</strong><span>Arrependimento em até 7 dias</span></div>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ FOOTER ============ -->
   <footer class="site-footer">
     <div class="wrap footer-grid">
@@ -357,30 +476,33 @@
         <span class="footer-mark" data-mark></span>
         <div>
           <span class="brand-lockup footer-lockup" data-lockup></span>
-          <p>Street basics unissex, feitos para durar — do rolê ao treino.</p>
+          <p>Street basics feitos para durar — do rolê ao treino.</p>
+          <p class="footer-contact">
+            <a href="mailto:contato@davverolimone.com.br">contato@davverolimone.com.br</a><br>
+            <a href="https://wa.me/5511999991234" target="_blank" rel="noopener">(11) 99999-1234</a>
+          </p>
         </div>
       </div>
 
       <nav class="footer-col" aria-label="Loja">
         <h4>Loja</h4>
         <a href="#colecao">Todos os produtos</a>
-        <a href="#colecao">Camisetas</a>
-        <a href="#colecao">Moletons</a>
-        <a href="#colecao">Calças</a>
-        <a href="#colecao">Acessórios</a>
+        <a href="homem.html">Masculino</a>
+        <a href="mulher.html">Feminino</a>
+        <a href="#lookbook">Lookbook</a>
       </nav>
 
       <nav class="footer-col" aria-label="Ajuda">
         <h4>Ajuda</h4>
-        <a href="#contato">Trocas e devoluções</a>
-        <a href="#contato">Guia de tamanhos</a>
-        <a href="#contato">Frete e prazos</a>
-        <a href="#contato">Fale com a gente</a>
+        <a href="contato.html">Central de atendimento</a>
+        <a href="contato.html#trocas">Trocas e devoluções</a>
+        <a href="contato.html#tamanhos">Guia de tamanhos</a>
+        <a href="contato.html#prazos">Frete e prazos</a>
       </nav>
 
       <nav class="footer-col" aria-label="Ateliê">
         <h4>Ateliê</h4>
-        <a href="#sobre">Sobre a marca</a>
+        <a href="sobre.html">Sobre a marca</a>
         <a href="#qualidade">Nossos tecidos</a>
         <a href="#qualidade">Prata 925</a>
         <a href="#lookbook">Lookbook</a>
@@ -388,15 +510,29 @@
 
       <div class="footer-col social" aria-label="Redes sociais">
         <h4>Social</h4>
-        <a href="#instagram">Instagram</a>
-        <a href="#contato">TikTok</a>
-        <a href="#contato">Pinterest</a>
+        <a href="https://instagram.com/davverolimone" target="_blank" rel="noopener">Instagram</a>
+        <a href="contato.html">TikTok</a>
+        <a href="contato.html">Pinterest</a>
       </div>
     </div>
 
+    <div class="wrap footer-pay">
+      <span class="footer-pay-label">Formas de pagamento</span>
+      <ul class="pay-list">
+        <li><img src="images/pay/visa.svg" alt="Visa" width="54" height="37" loading="lazy" decoding="async"></li>
+        <li><img src="images/pay/mastercard.svg" alt="Mastercard" width="54" height="37" loading="lazy" decoding="async"></li>
+        <li><img src="images/pay/elo.svg" alt="Elo" width="54" height="37" loading="lazy" decoding="async"></li>
+        <li><img src="images/pay/amex.svg" alt="Amex" width="54" height="37" loading="lazy" decoding="async"></li>
+        <li><img src="images/pay/hipercard.svg" alt="Hipercard" width="54" height="37" loading="lazy" decoding="async"></li>
+        <li><img src="images/pay/pix.svg" alt="Pix" width="54" height="37" loading="lazy" decoding="async"></li>
+        <li><img src="images/pay/boleto.svg" alt="Boleto" width="54" height="37" loading="lazy" decoding="async"></li>
+      </ul>
+    </div>
+
     <div class="wrap footer-bottom">
-      <span>© 2026 VERO LIMONE. Todos os direitos reservados.</span>
-      <span>Feito com limão e cuidado.</span>
+      <span>© 2026 DAVVERO LIMONE · CNPJ 12.345.678/0001-90</span>
+      <span>"Eu te exaltarei, ó Deus, rei meu, e bendirei o teu nome pelos séculos dos séculos e para sempre". Salmo 145:1</span>
+      <span>Feito com ❤️ e 🍋</span>
     </div>
   </footer>
 
@@ -424,53 +560,11 @@
     </footer>
   </aside>
 
-  <!-- ============ QUICK VIEW ============ -->
-  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Detalhes do produto">
-    <div class="modal-card">
-      <button class="icon-x modal-close" id="modalClose" aria-label="Fechar">✕</button>
-
-      <div class="modal-media" id="modalMedia">
-        <div class="stage-blob" id="modalBlob" aria-hidden="true"></div>
-        <div class="modal-garment" id="modalGarment"></div>
-      </div>
-
-      <div class="modal-info">
-        <p class="eyebrow" id="modalCat">Camisetas</p>
-        <h3 id="modalName">Camiseta Box</h3>
-        <div class="modal-price-line">
-          <p class="modal-price" id="modalPrice">R$ 99,00</p>
-          <span class="pix-hint">5% off no Pix</span>
-        </div>
-        <p class="modal-desc" id="modalDesc"></p>
-
-        <div class="opt">
-          <span class="opt-label">Cor: <em id="modalColorName">Cru</em></span>
-          <div class="swatches" id="modalSwatches" role="group" aria-label="Escolher cor"></div>
-        </div>
-
-        <div class="opt">
-          <span class="opt-label">Tamanho</span>
-          <div class="sizes" id="modalSizes" role="group" aria-label="Escolher tamanho"></div>
-        </div>
-
-        <div class="modal-actions">
-          <div class="qty" aria-label="Quantidade">
-            <button id="qtyMinus" aria-label="Diminuir">−</button>
-            <span id="qtyVal">1</span>
-            <button id="qtyPlus" aria-label="Aumentar">+</button>
-          </div>
-          <button class="btn btn-dark full" id="modalAdd">Adicionar ao carrinho</button>
-        </div>
-
-        <ul class="modal-meta" id="modalMeta"></ul>
-      </div>
-    </div>
-  </div>
-
   <!-- ============ TOAST ============ -->
   <div class="toast" id="toast" role="status" aria-live="polite"><span></span></div>
 
   <script src="data.js"></script>
+  <script src="auth.js"></script>
   <script src="script.js"></script>
   <script src="vendor/gsap.min.js"></script>
   <script src="vendor/ScrollTrigger.min.js"></script>

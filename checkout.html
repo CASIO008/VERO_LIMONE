@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#FAF8F1" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#100F0C" media="(prefers-color-scheme: dark)" />
   <meta name="color-scheme" content="light dark" />
-  <title>Checkout — VERO LIMONE</title>
+  <title>Checkout — DAVVERO LIMONE</title>
   <meta name="robots" content="noindex" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -27,6 +27,7 @@
     })();
   </script>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="pay.css" />
 </head>
 <body class="ck-body">
 
@@ -34,12 +35,12 @@
 
   <!-- ============ HEADER ============ -->
   <header class="ck-header">
-    <div class="wrap ck-header-inner">
-      <a class="brand" href="index.html" aria-label="VERO LIMONE — voltar para a loja">
+    <div class="wrap ck-header-inner ck-header--center">
+      <a class="ck-back" href="index.html"><span class="arr">←</span> Voltar para a loja</a>
+      <a class="brand brand--center" href="index.html" aria-label="DAVVERO LIMONE — voltar para a loja">
         <span class="brand-mark" data-mark></span>
         <span class="brand-lockup" data-lockup></span>
       </a>
-      <a class="ck-back" href="index.html">← Voltar para a loja</a>
       <div class="ck-head-actions">
         <span class="ck-secure">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
@@ -59,9 +60,10 @@
       <!-- ============ STEPS ============ -->
       <ol class="ck-steps" id="ckSteps" aria-label="Etapas do checkout">
         <li class="is-active" data-step="1"><span>1</span>Sacola</li>
-        <li data-step="2"><span>2</span>Entrega</li>
-        <li data-step="3"><span>3</span>Pagamento</li>
-        <li data-step="4"><span>4</span>Pronto</li>
+        <li data-step="2"><span>2</span>Identificação</li>
+        <li data-step="3"><span>3</span>Entrega</li>
+        <li data-step="4"><span>4</span>Pagamento</li>
+        <li data-step="5"><span>5</span>Pronto</li>
       </ol>
 
       <div class="ck-grid">
@@ -85,13 +87,125 @@
             </div>
           </section>
 
-          <!-- ---------- STEP 2 · ENTREGA ---------- -->
-          <section class="ck-step" id="step2" aria-label="Entrega" hidden>
+          <!-- ---------- STEP 2 · IDENTIFICAÇÃO ---------- -->
+          <section class="ck-step" id="step2" aria-label="Identificação" hidden>
+            <div class="ck-panel">
+              <div class="ck-panel-head">
+                <h2>Identificação</h2>
+                <button class="ck-link" id="backTo1" type="button">← editar sacola</button>
+              </div>
+
+              <div class="ck-account" id="ckAccount">
+                <!-- logado -->
+                <div class="ck-account-in" id="ckAccLogged" hidden>
+                  <span class="ck-avatar" id="ckAvatar" aria-hidden="true">V</span>
+                  <div class="ck-account-who">
+                    <strong id="ckAccName">—</strong>
+                    <em id="ckAccEmail">—</em>
+                  </div>
+                  <span class="ck-account-badge" id="ckAccBadge"></span>
+                  <button class="ck-link" id="ckAccOut" type="button">sair</button>
+                </div>
+
+                <!-- visitante -->
+                <div class="ck-account-out" id="ckAccGuest">
+                  <div class="ck-account-head">
+                    <div>
+                      <strong id="ckAccTitle">Entre ou crie sua conta</strong>
+                      <p id="ckAccLead">Com conta você usa os cartões e endereços salvos e acompanha o pedido. Sem conta, é só preencher os dados na próxima etapa.</p>
+                    </div>
+                  </div>
+
+                  <div class="ck-acc-tabs" role="tablist" aria-label="Entrar ou criar conta">
+                    <button type="button" class="ck-acc-tab is-active" data-acc-tab="login" id="ckAccTabLogin" role="tab" aria-selected="true">Já tenho conta</button>
+                    <button type="button" class="ck-acc-tab" data-acc-tab="register" id="ckAccTabRegister" role="tab" aria-selected="false">Criar conta</button>
+                  </div>
+
+                  <!-- entrar -->
+                  <form class="ck-account-form" id="ckAccForm" novalidate>
+                    <label class="ck-field">
+                      <span>E-mail</span>
+                      <input type="email" id="ckAccEmailIn" autocomplete="email" placeholder="voce@email.com" />
+                    </label>
+                    <label class="ck-field">
+                      <span>Senha</span>
+                      <span class="ck-pass">
+                        <input type="password" id="ckAccPassIn" autocomplete="current-password" placeholder="Sua senha" />
+                        <button type="button" class="ck-eye" data-eye="ckAccPassIn" aria-label="Mostrar senha">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3.2"/></svg>
+                        </button>
+                      </span>
+                    </label>
+                    <div class="ck-account-form-foot">
+                      <label class="ck-account-remember"><input type="checkbox" id="ckAccRemember" checked /> <span>Manter conectado</span></label>
+                      <button class="btn btn-dark sm" id="ckAccLoginBtn" type="submit">Entrar</button>
+                    </div>
+                    <p class="ck-account-msg" id="ckAccMsg" role="status"></p>
+                    <p class="ck-account-fine">Esqueceu a senha? <a href="conta.html#recuperar">Recuperar acesso</a></p>
+                  </form>
+
+                  <!-- criar conta -->
+                  <form class="ck-account-form" id="ckAccRegForm" hidden novalidate>
+                    <div class="ck-row">
+                      <label class="ck-field">
+                        <span>Nome completo</span>
+                        <input type="text" id="ckRegName" autocomplete="name" placeholder="Nome e sobrenome" />
+                        <small class="wl-error" id="ckRegNameErr"></small>
+                      </label>
+                      <label class="ck-field">
+                        <span>WhatsApp <em>(opcional)</em></span>
+                        <input type="tel" id="ckRegPhone" autocomplete="tel" placeholder="(11) 98765-4321" />
+                      </label>
+                    </div>
+                    <div class="ck-row">
+                      <label class="ck-field">
+                        <span>E-mail</span>
+                        <input type="email" id="ckRegEmail" autocomplete="email" placeholder="voce@email.com" />
+                        <small class="wl-error" id="ckRegEmailErr"></small>
+                      </label>
+                      <label class="ck-field">
+                        <span>Senha</span>
+                        <input type="password" id="ckRegPass" autocomplete="new-password" placeholder="Mínimo de 8 caracteres" />
+                        <span class="acc-meter" aria-hidden="true"><i id="ckRegBar"></i></span>
+                        <small class="acc-hint" id="ckRegHint">Use 8+ caracteres com letras, números e um símbolo.</small>
+                      </label>
+                    </div>
+                    <label class="ck-account-remember"><input type="checkbox" id="ckRegMarketing" /> <span>Quero receber novidades e ofertas</span></label>
+                    <div class="ck-account-form-foot">
+                      <button class="btn btn-dark sm" id="ckRegBtn" type="submit">Criar conta e continuar</button>
+                    </div>
+                    <p class="ck-account-msg" id="ckRegMsg" role="status"></p>
+                  </form>
+
+                  <button class="ck-link ck-acc-skip" id="ckAccSkip" type="button">Continuar como visitante →</button>
+                </div>
+              </div>
+
+              <!-- lembrar dados -->
+              <div class="ck-remember">
+                <label class="ck-check-line">
+                  <input type="checkbox" id="ckRememberData" checked />
+                  <span><strong>Lembrar meus dados neste navegador</strong>
+                    <em>Nome, e-mail, telefone e endereço. Dados de cartão nunca são guardados.</em></span>
+                </label>
+                <button class="ck-link" id="ckForgetData" type="button">apagar dados salvos</button>
+              </div>
+            </div>
+            <div class="ck-actions">
+              <button class="btn btn-ghost" id="backTo1b" type="button">← Voltar</button>
+              <button class="btn btn-dark" id="toStep3" type="button">Continuar para entrega <span class="arr">→</span></button>
+            </div>
+          </section>
+
+          <!-- ---------- STEP 3 · ENTREGA ---------- -->
+          <section class="ck-step" id="step3" aria-label="Entrega" hidden>
             <div class="ck-panel">
               <div class="ck-panel-head">
                 <h2>Entrega</h2>
-                <button class="ck-link" id="backTo1" type="button">← editar sacola</button>
+                <button class="ck-link" id="backTo2" type="button">← identificação</button>
               </div>
+
+              <div class="ck-who" id="ckWho"></div>
 
               <div class="ck-fields">
                 <label class="ck-field">
@@ -179,103 +293,30 @@
               </div>
             </div>
             <div class="ck-actions">
-              <button class="btn btn-ghost" id="backTo1b" type="button">← Voltar</button>
-              <button class="btn btn-dark" id="toStep3" type="button">Continuar para pagamento <span class="arr">→</span></button>
+              <button class="btn btn-ghost" id="backTo2b" type="button">← Voltar</button>
+              <button class="btn btn-dark" id="toStep4" type="button">Continuar para pagamento <span class="arr">→</span></button>
             </div>
           </section>
 
-          <!-- ---------- STEP 3 · PAGAMENTO ---------- -->
-          <section class="ck-step" id="step3" aria-label="Pagamento" hidden>
+          <!-- ---------- STEP 4 · PAGAMENTO ---------- -->
+          <section class="ck-step" id="step4" aria-label="Pagamento" hidden>
             <div class="ck-panel">
               <div class="ck-panel-head">
                 <h2>Pagamento</h2>
-                <button class="ck-link" id="backTo2" type="button">← editar entrega</button>
+                <button class="ck-link" id="backTo3" type="button">← editar entrega</button>
               </div>
 
-              <div class="ck-pay" role="radiogroup" aria-label="Forma de pagamento" id="ckPayOpts">
-
-                <label class="ck-pay-opt is-active">
-                  <input type="radio" name="pay" value="pix" checked />
-                  <span class="ck-pay-info">
-                    <strong>Pix <span class="ck-tag">5% off</span></strong>
-                    <em>Aprovação imediata</em>
-                  </span>
-                  <span class="ck-pay-ico" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l4 4-4 4-4-4 4-4Z"/><path d="M12 13l4 4-4 4-4-4 4-4Z"/><path d="M7 8l-4 4 4 4M17 8l4 4-4 4"/></svg>
-                  </span>
-                </label>
-                <div class="ck-pay-panel" data-panel="pix">
-                  <div class="ck-pix">
-                    <div class="ck-qr" id="ckQr" aria-hidden="true"></div>
-                    <p><strong>Escaneie o QR Code no app do seu banco.</strong><br/>O desconto de 5% já está aplicado no resumo ao lado. Este QR é demonstrativo.</p>
-                  </div>
-                </div>
-
-                <label class="ck-pay-opt">
-                  <input type="radio" name="pay" value="card" />
-                  <span class="ck-pay-info">
-                    <strong>Cartão de crédito</strong>
-                    <em>Até 6x sem juros</em>
-                  </span>
-                  <span class="ck-pay-ico" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18M7 15h4"/></svg>
-                  </span>
-                </label>
-                <div class="ck-pay-panel" data-panel="card" hidden>
-                  <div class="ck-fields">
-                    <label class="ck-field">
-                      <span>Número do cartão</span>
-                      <input type="text" id="ckCardNum" inputmode="numeric" placeholder="0000 0000 0000 0000" autocomplete="cc-number" />
-                      <small class="ck-error"></small>
-                    </label>
-                    <label class="ck-field">
-                      <span>Nome impresso no cartão</span>
-                      <input type="text" id="ckCardName" placeholder="COMO ESTÁ NO CARTÃO" autocomplete="cc-name" />
-                      <small class="ck-error"></small>
-                    </label>
-                    <div class="ck-row ck-row-3">
-                      <label class="ck-field">
-                        <span>Validade</span>
-                        <input type="text" id="ckCardExp" inputmode="numeric" placeholder="MM/AA" autocomplete="cc-exp" />
-                        <small class="ck-error"></small>
-                      </label>
-                      <label class="ck-field ck-narrow">
-                        <span>CVV</span>
-                        <input type="text" id="ckCardCvv" inputmode="numeric" placeholder="123" autocomplete="cc-csc" />
-                        <small class="ck-error"></small>
-                      </label>
-                      <label class="ck-field ck-grow">
-                        <span>Parcelas</span>
-                        <select id="ckInstallments"></select>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-
-                <label class="ck-pay-opt">
-                  <input type="radio" name="pay" value="boleto" />
-                  <span class="ck-pay-info">
-                    <strong>Boleto bancário</strong>
-                    <em>Vence em até 3 dias úteis</em>
-                  </span>
-                  <span class="ck-pay-ico" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5v14M8 5v14M12 5v10M16 5v14M20 5v14"/></svg>
-                  </span>
-                </label>
-                <div class="ck-pay-panel" data-panel="boleto" hidden>
-                  <p class="ck-boleto">Geramos o boleto após a confirmação e enviamos para o seu e-mail. A liberação do pedido acontece em até 2 dias úteis após o pagamento.</p>
-                </div>
-
-              </div>
+              <!-- lista de meios + painel do meio escolhido (gerados por checkout.js) -->
+              <div class="ck-pay" id="ckPayRoot" aria-label="Forma de pagamento"></div>
             </div>
             <div class="ck-actions">
-              <button class="btn btn-ghost" id="backTo2b" type="button">← Voltar</button>
+              <button class="btn btn-ghost" id="backTo3b" type="button">← Voltar</button>
               <button class="btn btn-dark" id="ckConfirm" type="button">Finalizar pedido <span class="arr">→</span></button>
             </div>
           </section>
 
-          <!-- ---------- STEP 4 · PRONTO ---------- -->
-          <section class="ck-step" id="step4" aria-label="Pedido confirmado" hidden>
+          <!-- ---------- STEP 5 · PRONTO ---------- -->
+          <section class="ck-step" id="step5" aria-label="Pedido confirmado" hidden>
             <div class="ck-panel ck-success">
               <div class="ck-check" aria-hidden="true">
                 <svg viewBox="0 0 52 52"><circle class="ck-check-circle" cx="26" cy="26" r="24" fill="none"/><path class="ck-check-mark" fill="none" d="M14 27l8 8 16-17"/></svg>
@@ -290,7 +331,7 @@
                   Acompanhar pelo WhatsApp
                 </a>
               </div>
-              <p class="ck-success-note">Obrigado por vestir VERO LIMONE.</p>
+              <p class="ck-success-note">Obrigado por vestir DAVVERO LIMONE.</p>
             </div>
           </section>
 
@@ -302,6 +343,7 @@
             <h3>Resumo do pedido</h3>
             <div class="ck-sum-items" id="ckSumItems"></div>
             <dl class="ck-sum-totals" id="ckSumTotals"></dl>
+            <div class="ck-sum-pay" id="ckSumPay"></div>
             <button class="btn btn-dark full" id="ckMainBtn" type="button">Continuar <span class="arr">→</span></button>
             <a class="btn ck-whats full" id="ckWhats" href="#" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.7-1.3 1.3-1.9 1.4-.5.1-1.1.1-1.8-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4.2.5.7 1.8.8 1.9.1.1.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.1-.3.3-.1.6.1.3.7 1.2 1.6 1.9 1.1.9 2 1.2 2.2 1.3.3.1.4.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.8.8.3.1.4.2.5.3.1.2.1.8-.1 1.4Z"/></svg>
@@ -321,14 +363,18 @@
 
   <footer class="ck-footer">
     <div class="wrap">
-      <span>© 2026 VERO LIMONE</span>
-      <span>Ambiente demonstrativo — nenhum pagamento é processado.</span>
+      <span>© 2026 DAVVERO LIMONE · CNPJ 12.345.678/0001-90</span>
+      <span><a href="contato.html">Central de atendimento</a> · Ambiente demonstrativo — nenhum pagamento é processado.</span>
     </div>
   </footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite"><span></span></div>
 
   <script src="data.js"></script>
+  <script src="assets.js"></script>
+  <script src="pay-core.js"></script>
+  <script src="auth.js"></script>
+  <script src="wallet.js"></script>
   <script src="checkout.js"></script>
   <script src="vendor/gsap.min.js"></script>
   <script src="vendor/ScrollTrigger.min.js"></script>

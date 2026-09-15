@@ -1,5 +1,5 @@
 /* ============================================================
-   VERO LIMONE — tema claro/escuro
+   DAVVERO LIMONE — tema claro/escuro
    Segue o sistema por padrão; o botão permite forçar o tema
    e a escolha fica salva no navegador.
    ============================================================ */

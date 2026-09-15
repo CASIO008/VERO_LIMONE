@@ -1,5 +1,5 @@
 /* ============================================================
-   VERO LIMONE — street basics
+   DAVVERO LIMONE — street basics
    Núcleo compartilhado: marca oficial, utilidades, catálogo,
    ilustrações SVG e carrinho.
    ============================================================ */
@@ -27,42 +27,74 @@ function luma(hex) {
 }
 const brl = v => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
+/* normaliza texto para busca (sem acentos, minúsculo) */
+const norm = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+/* ---------------- preço / parcelamento ---------------- */
+const PIX_OFF = 0.05;
+const INSTALLMENTS = 12;
+const installmentLabel = v => `até ${INSTALLMENTS}x de ${brl(v / INSTALLMENTS)}`;
+const pixPrice = v => v * (1 - PIX_OFF);
+const offPct = p => (p.oldPrice && p.oldPrice > p.price ? Math.round((1 - p.price / p.oldPrice) * 100) : 0);
+
 /* ---------------- marca oficial (símbolo) ----------------
-   Paths exatos do arquivo enviado. viewBox recortado no
-   bounding box do símbolo (canvas 1080, centro 540,540).  */
+   Arte completa enviada (folha preenchida + círculos + traços).
+   As cores vivem em CSS (--mk-0 … --mk-10) para o símbolo
+   trocar de tom sozinho entre o tema claro e o escuro.        */
+let mkSeq = 0;
 function markSVG(o = {}) {
-  const blob    = o.blob    || '#E1EC2A';
-  const chevron = o.chevron || '#FD4700';
-  const dash    = o.dash    || '#FF6701';
-  const curve   = o.curve   || '#FF784F';
-  const W = 51.5;
-  return `<svg viewBox="196 162 688 756" fill="none" aria-hidden="true">
-    <path class="mk-draw" pathLength="1" d="m308.82 871.09l-44.49-22.89 6.35-76.28c0 0-26.7-116.96-29.24-134.76-2.54-17.8-11.44-179.26-11.44-179.26l89-161.46c0 0 133.49-81.37 142.39-76.28 8.89 5.08 144.93 6.35 144.93 6.35l146.21-30.51 27.96 22.88c0 0-34.32 64.84 1.28 116.97 35.59 52.12 62.29 108.06 63.56 118.24 1.27 10.17 5.09 221.21 5.09 221.21l-62.3 110.61-171.63 97.89-277.15-36.87z" stroke="${blob}" stroke-width="${W}" stroke-linejoin="bevel"/>
-    <path d="m378.03 728.45l170.99-171.58-171.58-174.56" stroke="${chevron}" stroke-width="${W}" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="m442.39 558.04l-69.87 0.23" stroke="${dash}" stroke-width="${W}" stroke-linecap="round"/>
-    <path d="m587.08 722.21v-93.87" stroke="${blob}" stroke-width="${W}" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="m577.69 346.74c0 0 0 191.94 190.86 190.86" stroke="${curve}" stroke-width="${W}" stroke-linecap="round" stroke-linejoin="round"/>
+  const uid = 'mkclip' + (++mkSeq);
+  const mono = o.mono;
+  const style = mono
+    ? ` style="${Array.from({ length: 11 }, (_, i) => `--mk-${i}:${mono}`).join(';')}"`
+    : '';
+  return `<svg class="mk" viewBox="196 143 688 756" fill="none" aria-hidden="true"${style}>
+    <defs>
+      <clipPath clipPathUnits="userSpaceOnUse" id="${uid}">
+        <path d="m308.82 852.09l-44.49-22.89 6.35-76.28c0 0-26.69-116.96-29.24-134.76-2.54-17.8-11.44-179.26-11.44-179.26l89-161.46c0 0 133.49-81.37 142.39-76.28 8.9 5.08 144.93 6.35 144.93 6.35l146.2-30.51 27.97 22.88c0 0-34.32 64.84 1.28 116.97 35.59 52.12 62.29 108.06 63.57 118.23 1.27 10.18 5.08 221.22 5.08 221.22l-62.3 110.61-171.63 97.89-277.15-36.87z"/>
+      </clipPath>
+    </defs>
+    <g clip-path="url(#${uid})">
+      <path class="mk0" fill-rule="evenodd" d="m525.48 937.51c-224.57 0-406.09-193.4-406.09-432.66 0-239.26 181.52-432.67 406.09-432.67 224.56 0 406.09 193.41 406.09 432.67 0 239.26-181.53 432.66-406.09 432.66z"/>
+    </g>
+    <path class="mk1" fill-rule="evenodd" d="m496.97 842.86l-137.56-6.66-59.9 13.31-17.75-17.74-15.53-59.91-11.09-119.8-6.66-82.09c0 0 28.84-33.28 48.81-64.34 19.97-31.06 62.12-108.71 62.12-108.71 0 0 68.78-84.31 148.65-90.96 79.87-6.66 113.15-26.62 177.49 2.22 64.34 28.84 102.05 48.81 119.8 68.77 17.75 19.97 42.15 88.75 42.15 88.75l-2.21 106.49-6.66 104.27-64.34 90.97c-15.53 13.31-119.8 66.55-119.8 66.55l-88.75 19.97z"/>
+    <path class="mk2" fill-rule="evenodd" d="m601.75 850.49c-144.75 0-261.75-118.12-261.75-264.25 0-146.12 117-264.24 261.75-264.24 144.75 0 261.75 118.12 261.75 264.24 0 146.13-117 264.25-261.75 264.25z"/>
+    <path class="mk3" fill-rule="evenodd" d="m608.82 835.18c-130.68 0-236.31-107.22-236.31-239.87 0-132.65 105.63-239.87 236.31-239.87 130.68 0 236.31 107.22 236.31 239.87 0 132.65-105.63 239.87-236.31 239.87z"/>
+    <path class="mk4" fill-rule="evenodd" d="m708.86 804.86l-104.82-206.73-109.15-207.64"/>
+    <path class="mk4" fill-rule="evenodd" d="m822.27 710.4l-219.95-112.28"/>
+    <path class="mk5 mk-draw" pathLength="1" fill-rule="evenodd" d="m308.82 852.09l-44.49-22.89 6.35-76.28c0 0-26.69-116.96-29.24-134.76-2.54-17.8-11.44-179.26-11.44-179.26l89-161.46c0 0 133.49-81.37 142.39-76.28 8.9 5.08 144.93 6.35 144.93 6.35l146.2-30.51 27.97 22.88c0 0-34.32 64.84 1.28 116.97 35.59 52.12 62.29 108.06 63.57 118.23 1.27 10.18 5.08 221.22 5.08 221.22l-62.3 110.61-171.63 97.89-277.15-36.87z"/>
+    <g>
+      <path class="mk6" fill-rule="evenodd" d="m529.31 594.41l-84.31 0.29"/>
+      <path class="mk6" fill-rule="evenodd" d="m614.48 753.31l-6.89-77.95"/>
+      <path class="mk6" fill-rule="evenodd" d="m497.18 717.79l53.76-63.64"/>
+      <path class="mk6" fill-rule="evenodd" d="m477.28 484.18l64.13 53.17"/>
+      <path class="mk6" fill-rule="evenodd" d="m661.66 656.27l61.89 55.77"/>
+      <path class="mk7" fill-rule="evenodd" d="m591.85 427.08c0 0 2.61 43.1 20.93 81.16 18.31 38.06 69.56 104.35 166.24 98.7"/>
+      <path class="mk8" fill-rule="evenodd" d="m594.42 430.35c0 0-3.33 37.46 24.34 86.32 27.68 48.85 67.99 92.76 154.62 91"/>
+      <path class="mk9" fill-rule="evenodd" d="m611.06 730.75l-15.96-56.73c0 0-3.6-19.9 11.69-20 15.28-0.1 12.65 18.83 12.65 18.83l-7.45 59.99"/>
+      <path class="mk9" fill-rule="evenodd" d="m706.74 697.56l-50.72-30c0 0-16.34-11.92-5.36-22.54 10.99-10.63 22.15 4.88 22.15 4.88l36.05 48.53"/>
+      <path class="mk9" fill-rule="evenodd" d="m508.72 704.98l26.97-52.39c0 0 10.93-17.02 22.19-6.68 11.25 10.34-3.58 22.4-3.58 22.4l-46.32 38.84"/>
+      <path class="mk9" fill-rule="evenodd" d="m461.49 594.14l57.77-11.59c0 0 20.13-2.07 19.06 13.18-1.07 15.25-19.74 11.17-19.74 11.17l-59.25-12"/>
+      <path class="mk9" fill-rule="evenodd" d="m493.65 498.26l52.65 26.48c0 0 17.11 10.78 6.88 22.13-10.24 11.35-22.44-3.37-22.44-3.37l-39.26-45.97"/>
+    </g>
+    <path class="mk4" fill-rule="evenodd" d="m398.34 694.55l203.53-97.72-73.45 222.82"/>
+    <path class="mk10" fill-rule="evenodd" d="m602 599.34l-200.52-103.1"/>
   </svg>`;
 }
 function attachMarks() {
   $$('[data-mark]').forEach(el => {
-    el.innerHTML = markSVG({
-      blob:    el.dataset.blob,
-      chevron: el.dataset.chevron,
-      dash:    el.dataset.dash,
-      curve:   el.dataset.curve
-    });
+    el.innerHTML = markSVG({ mono: el.dataset.mono });
     if (el.dataset.size) el.style.width = el.dataset.size + 'px';
   });
 }
 
 /* ---------------- marca oficial (lockup tipográfico) ----------------
-   Lockup em HTML/CSS: VERO grande, LIMONE deslocado ao lado e
+   Lockup em HTML/CSS: DAVVERO grande, LIMONE deslocado ao lado e
    "street basics" abaixo. Usa a fonte Futura Renner do projeto,
    então o texto flui sozinho e fica legível em qualquer tamanho.  */
 function brandLockupHTML() {
   return `<span class="lk-row">
-      <span class="lk-vero">VERO</span>
+      <span class="lk-vero">DAVVERO</span>
       <span class="lk-limone">LIMONE</span>
     </span>
     <span class="lk-sub">street basics</span>`;
@@ -92,6 +124,54 @@ const CAT_LABEL = {
   camisetas: 'Camisetas', moletons: 'Moletons', jaquetas: 'Jaquetas',
   calcas: 'Calças', shorts: 'Shorts', underwear: 'Underwear', acessorios: 'Acessórios'
 };
+
+/* ---------------- lookbook (vitrine + página do look) ----------------
+   Cada look é uma combinação real de peças: a home mostra a vitrine e
+   look.html?id=N abre a página com todas as peças separadas por grupo. */
+const LOOKS = [
+  { id: 1, img: 'images/look-street-2.jpg', title: 'Look 01', sub: 'Oversized total',
+    desc: 'Camadas em cinza sobre denim escuro — a base oversized no volume certo.',
+    note: 'Na dúvida entre dois tamanhos, fique com o maior: o caimento é amplo de propósito.',
+    pieces: ['camiseta-washed', 'manga-longa-sport', 'calca-baggy', 'bone-washed'] },
+
+  { id: 2, img: 'images/look-street-1.jpg', title: 'Look 02', sub: 'Cinza & baggy',
+    desc: 'Camiseta pesada, manga longa por baixo e calça ampla: o uniforme do dia a dia.',
+    note: 'Contraste de texturas — algodão pesado em cima, moletom e denim embaixo.',
+    pieces: ['camiseta-heavy', 'manga-longa-sport', 'calca-moletom', 'relogio-digital'] },
+
+  { id: 3, img: 'images/hero-street.jpg', title: 'Look 03', sub: 'Rua & moletom',
+    desc: 'Hoodie cinza com casaco escuro por cima — conforto de casa, atitude de rua.',
+    note: 'Moletom combina com moletom: mantenha a paleta em dois tons e deixe o volume no topo.',
+    pieces: ['hoodie-puff', 'calca-cargo', 'relogio-field'] },
+
+  { id: 4, img: 'images/calca-cargo-corduroy.jpg', title: 'Look 04', sub: 'Cargo chumbo',
+    desc: 'Corduroy utilitário com camiseta boxy e touca — proporção larga de cima a baixo.',
+    note: 'Cargo pede top boxy para equilibrar o volume; a touca fecha o tom.',
+    pieces: ['calca-cargo', 'camiseta-box', 'touca-lima'] },
+
+  { id: 5, img: 'images/calca-jeans-baggy.jpg', title: 'Look 05', sub: 'Denim baggy',
+    desc: 'Denim pesado, camiseta de gramatura alta e corrente de prata no pescoço.',
+    note: 'Barra empilhada é bem-vinda: deixe o denim cair sobre o tênis.',
+    pieces: ['calca-baggy', 'camiseta-heavy', 'colar-cuban'] },
+
+  { id: 6, img: 'images/pulseira-kit-1.webp', title: 'Look 06', sub: 'Prata 925 no pulso',
+    desc: 'Camadas de prata 925 para usar juntas — pulseiras, anel e colar no mesmo tom.',
+    note: 'Empilhe tudo no mesmo pulso e use o colar por fora da gola.',
+    pieces: ['pulseira-kit', 'pulseira-cuban', 'anel-star', 'colar-cuban'] }
+];
+const lookById = id => LOOKS.find(l => l.id === Number(id)) || null;
+
+/* vitrine de categorias — cards com foto na home */
+const CATS = [
+  { id: 'camisetas',  label: 'Camisetas',  tagline: 'Pesadas e boxy',       photo: 'images/camiseta-washed-1.jpg' },
+  { id: 'moletons',   label: 'Moletons',   tagline: 'Felpudos e puff',      photo: 'images/hoodie-puff.jpg' },
+  { id: 'jaquetas',   label: 'Jaquetas',   tagline: 'Sherpa e fleece',      photo: 'images/jaqueta-sherpa.jpg' },
+  { id: 'calcas',     label: 'Calças',     tagline: 'Baggy, wide e cargo',  photo: 'images/calca-jeans-baggy.jpg' },
+  { id: 'shorts',     label: 'Shorts',     tagline: 'Cargo e sarja',        photo: 'images/shorts-cargo.jpg' },
+  { id: 'acessorios', label: 'Acessórios', tagline: 'Prata 925 e mais',     photo: 'images/colar-cuban.jpg' }
+];
+
+const GENDER_LABEL = { homem: 'Masculino', mulher: 'Feminino' };
 const FREE_SHIP = 199;
 const STANDARD_SHIP = 19.90;
 const EXPRESS_SHIP = 34.90;
@@ -100,145 +180,145 @@ const COUPONS = { LIMONE10: 0.10 };
 /* ------------------ catálogo ------------------ */
 const PRODUCTS = [
   /* ---- camisetas ---- */
-  { id: 'camiseta-box', name: 'Camiseta Box Graffiti', cat: 'camisetas', type: 'tee', price: 119, badge: 'Novo',
+  { id: 'camiseta-box', name: 'Camiseta Box Graffiti', cat: 'camisetas', type: 'tee', price: 119, badge: 'Novo', publico: 'ambos',
     meta: 'Estampa grafite · Algodão pesado', colorLabel: 'Preto estonado', colors: ['preto'],
     photos: ['images/camiseta-box-graffiti.jpg'],
     desc: 'Camiseta boxy em algodão pesado com estampa grafite nas costas e assinatura no peito. Lavagem estonada, feita para marcar presença.',
-    specs: ['Algodão pesado 240g', 'Estampa em silk de alta cobertura', 'Corte boxy unissex'] },
+    specs: ['Algodão pesado 240g', 'Estampa em silk de alta cobertura', 'Corte boxy amplo'] },
 
-  { id: 'camiseta-washed', name: 'Camiseta Washed Oversized', cat: 'camisetas', type: 'tee', price: 129, badge: 'Best-seller',
+  { id: 'camiseta-washed', name: 'Camiseta Washed Oversized', cat: 'camisetas', type: 'tee', price: 129, badge: 'Best-seller', publico: 'ambos',
     meta: 'Fio pesado · Lavagem estonada', colorLabel: 'Preto lavado', colors: ['preto'],
     photos: ['images/camiseta-washed-1.jpg', 'images/camiseta-washed-2.jpg'],
     desc: 'Oversized de ombro caído com lavagem estonada e grafismos refletivos. Cai bem em quem gosta de volume sem exagero.',
     specs: ['Fio pesado com lavagem', 'Grafismo refletivo', 'Ombro caído oversized'] },
 
-  { id: 'camiseta-heavy', name: 'Camiseta Heavy', cat: 'camisetas', type: 'tee', price: 139, badge: '',
+  { id: 'camiseta-heavy', name: 'Camiseta Heavy', cat: 'camisetas', type: 'tee', price: 139, badge: '', publico: 'ambos',
     meta: 'Alta gramatura · Recortes', colorLabel: 'Preto', colors: ['preto'],
     photos: ['images/camiseta-heavy.jpg'],
     desc: 'Nossa camiseta de maior gramatura, com recortes de painéis e gola canelada dupla. Estrutura que não deforma.',
     specs: ['Gramatura máxima', 'Painéis costurados', 'Gola canelada dupla'] },
 
-  { id: 'manga-longa-sport', name: 'Manga Longa Sport', cat: 'camisetas', type: 'longsleeve', price: 149, badge: 'Novo',
+  { id: 'manga-longa-sport', name: 'Manga Longa Sport', cat: 'camisetas', type: 'longsleeve', price: 149, badge: 'Novo', publico: 'ambos',
     meta: 'Elastano · Treino e academia', colorLabel: 'Preto', colors: ['preto'],
     photos: ['images/manga-longa-sport-1.jpg', 'images/manga-longa-sport-2.webp'],
     desc: 'Manga longa de treino com elastano: justa na medida, respirável e de toque seco. Vai do treino ao rolê sem perder a forma.',
     specs: ['Tecido com elastano', 'Toque seco · respirável', 'Costura flatlock anti-atrito'] },
 
   /* ---- moletons ---- */
-  { id: 'hoodie-puff', name: 'Hoodie Puff Print', cat: 'moletons', type: 'hoodie', price: 269, oldPrice: 319, badge: 'Best-seller',
+  { id: 'hoodie-puff', name: 'Hoodie Puff Print', cat: 'moletons', type: 'hoodie', price: 269, oldPrice: 319, badge: 'Best-seller', publico: 'ambos',
     meta: 'Estampa puff 3D · Capuz duplo', colorLabel: 'Preto', colors: ['preto'],
     photos: ['images/hoodie-puff.jpg'],
     desc: 'Hoodie pesado com estampa puff 3D de alto relevo, capuz forrado e barra canelada. O moletom que vira o look sozinho.',
     specs: ['Moletom pesado 480g', 'Estampa puff em relevo', 'Capuz forrado · mangas amplas'] },
 
   /* ---- jaquetas ---- */
-  { id: 'jaqueta-sherpa', name: 'Jaqueta Sherpa Vero', cat: 'jaquetas', type: 'jacket', price: 379, badge: 'Novo',
+  { id: 'jaqueta-sherpa', name: 'Jaqueta Sherpa Davvero', cat: 'jaquetas', type: 'jacket', price: 379, badge: 'Novo', publico: 'homem',
     meta: 'Sherpa macio · Gola esportiva', colorLabel: 'Verde & cru', colors: ['limone'],
     photos: ['images/jaqueta-sherpa.jpg'],
     desc: 'Jaqueta sherpa com gola esportiva, painéis em verde e cru e estampas bordadas. Aquece de verdade e não passa despercebida.',
     specs: ['Sherpa peluciado', 'Gola e punhos canelados', 'Estampas bordadas'] },
 
-  { id: 'jaqueta-fleece', name: 'Jaqueta Fleece Star', cat: 'jaquetas', type: 'jacket', price: 349, badge: '',
+  { id: 'jaqueta-fleece', name: 'Jaqueta Fleece Star', cat: 'jaquetas', type: 'jacket', price: 349, badge: '', publico: 'mulher',
     meta: 'Fleece peluciado · Zíper metálico', colorLabel: 'Preto & cru', colors: ['preto'],
     photos: ['images/jaqueta-fleece.webp'],
     desc: 'Fleece de corte reto com painéis geométricos e zíper metálico. Leve, quente e perfeita para meia-estação.',
     specs: ['Fleece peluciado', 'Zíper metálico YKK', 'Bolsos embutidos'] },
 
   /* ---- calças ---- */
-  { id: 'calca-baggy', name: 'Calça Jeans Baggy', cat: 'calcas', type: 'jeans', price: 319, badge: 'Novo',
+  { id: 'calca-baggy', name: 'Calça Jeans Baggy', cat: 'calcas', type: 'jeans', price: 319, badge: 'Novo', publico: 'homem',
     meta: 'Denim pesado · Estampa no bolso', colorLabel: 'Azul escuro', colors: ['jeans'],
     photos: ['images/calca-jeans-baggy.jpg'],
     desc: 'Baggy em denim pesado com bolsos cargo laterais e estampa assinada no bolso traseiro. Caimento amplo do quadril à barra.',
     specs: ['Denim pesado baggy', 'Bolsos cargo laterais', 'Cinco bolsos + pespontos'] },
 
-  { id: 'calca-wide', name: 'Calça Wide Leg', cat: 'calcas', type: 'jeans', price: 299, badge: '',
+  { id: 'calca-wide', name: 'Calça Wide Leg', cat: 'calcas', type: 'jeans', price: 299, badge: '', publico: 'mulher',
     meta: 'Denim rígido · Corte amplo', colorLabel: 'Preto estonado', colors: ['preto'],
     photos: ['images/calca-wide-leg.jpg'],
     desc: 'Wide leg de denim rígido com costura central marcada e barra ampla. Estrutura que cai reta e afina a silhueta.',
     specs: ['Denim rígido', 'Costura central', 'Barra ampla'] },
 
-  { id: 'calca-balloon', name: 'Calça Balloon', cat: 'calcas', type: 'jeans', price: 289, badge: '',
+  { id: 'calca-balloon', name: 'Calça Balloon', cat: 'calcas', type: 'jeans', price: 289, badge: '', publico: 'mulher',
     meta: 'Pregas · Barra elástica', colorLabel: 'Preto', colors: ['preto'],
     photos: ['images/calca-balloon.jpg'],
     desc: 'Calça balloon com pregas profundas e barra elástica que arredonda o caimento. Conforto de moletom com pegada técnica.',
     specs: ['Pregas frontais', 'Barra elástica', 'Cós com botão e elástico'] },
 
-  { id: 'calca-moletom', name: 'Calça Moletom', cat: 'calcas', type: 'jeans', price: 219, badge: '',
+  { id: 'calca-moletom', name: 'Calça Moletom', cat: 'calcas', type: 'jeans', price: 219, badge: '', publico: 'ambos',
     meta: 'Moletom peluciado · Cordão', colorLabel: 'Cinza mescla', colors: ['cinza'],
     photos: ['images/calca-moletom.jpg'],
     desc: 'Calça de moletom peluciado com cordão, bolso faca e barra canelada. A peça de descanso que também veste bem na rua.',
     specs: ['Moletom peluciado', 'Cós com cordão de algodão', 'Barra canelada'] },
 
-  { id: 'calca-cargo', name: 'Calça Cargo', cat: 'calcas', type: 'jeans', price: 279, badge: '',
+  { id: 'calca-cargo', name: 'Calça Cargo', cat: 'calcas', type: 'jeans', price: 279, badge: '', publico: 'homem',
     meta: 'Corduroy · Bolsos utilitários', colorLabel: 'Chumbo', colors: ['cinza'],
     photos: ['images/calca-cargo-corduroy.jpg'],
     desc: 'Cargo em corduroy com bolsos utilitários e ajuste de cordão na barra. Textura e volume na medida.',
     specs: ['Corduroy resistente', 'Bolsos utilitários', 'Ajuste na barra'] },
 
   /* ---- shorts ---- */
-  { id: 'shorts-cargo', name: 'Shorts Cargo', cat: 'shorts', type: 'shorts', price: 159, badge: 'Novo',
+  { id: 'shorts-cargo', name: 'Shorts Cargo', cat: 'shorts', type: 'shorts', price: 159, badge: 'Novo', publico: 'ambos',
     meta: 'Sarja · Bolsos com cordão', colorLabel: 'Bege & militar', colors: ['cru'],
     photos: ['images/shorts-cargo.jpg'],
     desc: 'Shorts cargo em sarja com bolsos amplos, cordões de ajuste e cós elástico. Do calor da rua ao fim de semana.',
     specs: ['Sarja de algodão', 'Bolsos cargo com cordão', 'Cós elástico com cordão'] },
 
   /* ---- underwear ---- */
-  { id: 'cueca-boxer', name: 'Cueca Boxer Algodão', cat: 'underwear', type: 'boxer', price: 59, badge: '',
+  { id: 'cueca-boxer', name: 'Cueca Boxer Algodão', cat: 'underwear', type: 'boxer', price: 59, badge: '', publico: 'homem',
     meta: 'Sem costura · Kit 3 por R$ 159', colorLabel: 'Chumbo', colors: ['cinza'],
     photos: ['images/cueca-boxer.jpg'],
     desc: 'Cueca boxer sem costura, em malha de algodão com sustentação e cós que não aperta. Disponível em kit com 3.',
-    specs: ['Malha sem costura', 'Algodão respirável', 'Cós confortável · Unissex'] },
+    specs: ['Malha sem costura', 'Algodão respirável', 'Cós confortável'] },
 
   /* ---- acessórios ---- */
-  { id: 'colar-cuban', name: 'Colar Cuban Chain', cat: 'acessorios', type: 'necklace', price: 249, badge: 'Prata 925',
+  { id: 'colar-cuban', name: 'Colar Cuban Chain', cat: 'acessorios', type: 'necklace', price: 249, badge: 'Prata 925', publico: 'ambos',
     meta: 'Prata 925 · Corrente cubana', colorLabel: 'Prata 925', colors: ['prata'],
     photos: ['images/colar-cuban.jpg'],
     desc: 'Corrente cubana em prata 925 com fecho reforçado. Livre de chumbo e zinco — hipoalergênica, feita para usar todos os dias.',
     specs: ['Prata 925 genuína', 'Livre de chumbo e zinco', 'Fecho reforçado'] },
 
-  { id: 'pulseira-cuban', name: 'Pulseira Cuban', cat: 'acessorios', type: 'bracelet', price: 199, badge: 'Prata 925',
+  { id: 'pulseira-cuban', name: 'Pulseira Cuban', cat: 'acessorios', type: 'bracelet', price: 199, badge: 'Prata 925', publico: 'ambos',
     meta: 'Prata 925 · Pingente pássaro', colorLabel: 'Prata 925', colors: ['prata'],
     photos: ['images/pulseira-cuban.webp'],
     desc: 'Pulseira de elos cubanos em prata 925 com pingente de pássaro. Sem chumbo e sem zinco na liga — segura para pele sensível.',
     specs: ['Prata 925 genuína', 'Livre de chumbo e zinco', 'Fecho ajustável'] },
 
-  { id: 'pulseira-kit', name: 'Pulseira Kit 3', cat: 'acessorios', type: 'bracelet', price: 299, badge: 'Prata 925',
+  { id: 'pulseira-kit', name: 'Pulseira Kit 3', cat: 'acessorios', type: 'bracelet', price: 299, badge: 'Prata 925', publico: 'ambos',
     meta: 'Kit 3 peças · Combinar', colorLabel: 'Prata 925', colors: ['prata'],
     photos: ['images/pulseira-kit-1.webp', 'images/pulseira-kit-2.jpg'], fit: 'cover',
     desc: 'Trio de pulseiras em prata 925: cubana, corda torcida e cuff liso. Use juntas para o efeito empilhado.',
     specs: ['3 peças em prata 925', 'Livre de chumbo e zinco', 'Ajuste deslizante'] },
 
-  { id: 'anel-star', name: 'Anel Star 925', cat: 'acessorios', type: 'ring', price: 169, badge: 'Prata 925',
+  { id: 'anel-star', name: 'Anel Star 925', cat: 'acessorios', type: 'ring', price: 169, badge: 'Prata 925', publico: 'ambos',
     meta: 'Prata 925 · Relevo de estrelas', colorLabel: 'Prata 925', colors: ['prata'],
     photos: ['images/anel-star.jpg'],
     desc: 'Anel aberto em prata 925 com relevo de estrelas e acabamento oxidado nos detalhes. Ajustável, sem chumbo e sem zinco.',
     specs: ['Prata 925 genuína', 'Livre de chumbo e zinco', 'Tam. ajustável'] },
 
-  { id: 'anel-wings', name: 'Anel Wings', cat: 'acessorios', type: 'ring', price: 189, badge: 'Prata 925',
+  { id: 'anel-wings', name: 'Anel Wings', cat: 'acessorios', type: 'ring', price: 189, badge: 'Prata 925', publico: 'mulher',
     meta: 'Prata 925 · Asas esculpidas', colorLabel: 'Prata 925', colors: ['prata'],
     photos: ['images/anel-wings-1.webp', 'images/anel-wings-2.webp'],
     desc: 'Anel de asas esculpidas em prata 925, com acabamento trabalhado à mão. Livre de chumbo e zinco.',
     specs: ['Prata 925 genuína', 'Livre de chumbo e zinco', 'Tam. ajustável'] },
 
-  { id: 'touca-lima', name: 'Touca Lima', cat: 'acessorios', type: 'beanie', price: 89, badge: '',
+  { id: 'touca-lima', name: 'Touca Lima', cat: 'acessorios', type: 'beanie', price: 89, badge: '', publico: 'ambos',
     meta: 'Tricô canelado · Dobra dupla', colorLabel: 'Preto', colors: ['preto'],
     photos: ['images/touca-1.jpg', 'images/touca-2.jpg'],
     desc: 'Touca de tricô canelado com dobra dupla e etiqueta aplicada. Aquece de verdade e fecha qualquer look.',
-    specs: ['Tricô canelado', 'Dobra dupla', 'Unissex'] },
+    specs: ['Tricô canelado', 'Dobra dupla', 'Tamanho único'] },
 
-  { id: 'relogio-digital', name: 'Relógio Digital', cat: 'acessorios', type: 'watch', price: 199, badge: 'Novo',
+  { id: 'relogio-digital', name: 'Relógio Digital', cat: 'acessorios', type: 'watch', price: 199, badge: 'Novo', publico: 'ambos',
     meta: 'Mostrador digital · 30m', colorLabel: 'Preto & verde', colors: ['preto'],
     photos: ['images/relogio-digital-1.jpg', 'images/relogio-digital-2.jpg'],
     desc: 'Relógio digital de pulso com caixa leve, luz, alarme e cronômetro. Resiste a respingos — do rolê à academia.',
     specs: ['Mostrador digital com luz', 'Alarme e cronômetro', 'Resistente a respingos'] },
 
-  { id: 'relogio-field', name: 'Relógio Field Solar', cat: 'acessorios', type: 'watch', price: 349, badge: '',
+  { id: 'relogio-field', name: 'Relógio Field Solar', cat: 'acessorios', type: 'watch', price: 349, badge: '', publico: 'ambos',
     meta: 'Solar · Pulseira nato', colorLabel: 'Verde militar', colors: ['cinza'],
     photos: ['images/relogio-field-1.jpg', 'images/relogio-field-2.jpg'],
     desc: 'Relógio de campo com carga solar, caixa fosca e pulseira nato de algodão. Estilo militar e energia infinita.',
     specs: ['Movimento solar', 'Pulseira nato de algodão', 'Resistente a respingos'] },
 
-  { id: 'bone-washed', name: 'Boné Washed', cat: 'acessorios', type: 'beanie', price: 129, badge: '',
+  { id: 'bone-washed', name: 'Boné Washed', cat: 'acessorios', type: 'beanie', price: 129, badge: '', publico: 'ambos',
     meta: 'Sarja estonada · Ajuste traseiro', colorLabel: 'Cinza estonado', colors: ['cinza'],
     photos: ['images/bone-1.jpg', 'images/bone-2.jpg'],
     desc: 'Boné de sarja lavada com aba curva, respiros bordados e ajuste traseiro. A lavagem estonada dá o tom usado certo.',
@@ -481,6 +561,89 @@ function productThumb(p, colorKey) {
   const key = p.tile || colorKey;
   const hex = COLORS[key] ? COLORS[key].hex : '#EFE9DA';
   return garmentSVG(p.type, hex);
+}
+
+/* ---------------- card de produto (compartilhado) ----------------
+   Mesmo markup na home, nas páginas de departamento e nos looks. */
+function badgeHTML(badge) {
+  if (!badge) return '';
+  const cls = badge === 'Best-seller' ? 'best' : (badge === 'Prata 925' ? 'silver' : '');
+  return `<span class="card-badge ${cls}">${badge}</span>`;
+}
+function priceHTML(p) {
+  return `${p.oldPrice ? `<s>${brl(p.oldPrice)}</s>` : ''}${brl(p.price)}`;
+}
+function productCardHTML(p, i, colorKey) {
+  const ck  = (colorKey && COLORS[colorKey]) ? colorKey : ((p.colors && p.colors[0]) || 'preto');
+  const hex = COLORS[ck] ? COLORS[ck].hex : '#EFE9DA';
+  const hasPhoto = p.photos && p.photos.length;
+
+  const tile = p.tile ? COLORS[p.tile].hex : '#EAE6D6';
+  const media = hasPhoto
+    ? `<img class="card-photo" src="${p.photos[0]}" alt="${p.name}" loading="lazy" decoding="async">
+       ${p.photos[1] ? `<img class="card-photo alt" src="${p.photos[1]}" alt="" loading="lazy" decoding="async">` : ''}`
+    : `<div class="card-garment">${garmentSVG(p.type, CREAM_GARMENT)}</div>`;
+
+  const mediaClass = hasPhoto
+    ? 'has-photo'
+    : `is-illustrated ${luma(tile) > 150 ? 'on-light' : 'on-dark'}`;
+  const mediaStyle = hasPhoto ? '' : ` style="--tile:${tile}"`;
+
+  const photosLabel = p.photos && p.photos.length > 1 ? ' · ' + p.photos.length + ' fotos' : '';
+  const colorsRow = `<span class="color-label"><i style="background:${hex}"></i>${p.colorLabel || COLORS[ck].name}${photosLabel}</span>`;
+
+  const off = offPct(p);
+  const offHTML = off ? `<span class="card-badge off">-${off}%</span>` : '';
+
+  return `<article class="card" style="animation-delay:${i * 55}ms" data-id="${p.id}">
+    <div class="card-media ${mediaClass}"${mediaStyle}>
+      ${badgeHTML(p.badge)}
+      ${offHTML}
+      <span class="card-index">${String(i + 1).padStart(2, '0')}</span>
+      ${media}
+      <div class="card-quick">
+        <a class="quick-view" href="produto.html?id=${encodeURIComponent(p.id)}" data-quick>Ver</a>
+        <button class="quick-add" type="button" data-add aria-label="Adicionar ${p.name} ao carrinho">Adicionar</button>
+      </div>
+    </div>
+    <div class="card-info">
+      ${colorsRow}
+      <h3>${p.name}</h3>
+      <p class="card-meta">${p.meta}</p>
+      <p class="card-price">${priceHTML(p)}<span class="pix-hint">5% off no Pix</span></p>
+      <p class="card-install">${installmentLabel(p.price)} <em>sem juros</em></p>
+    </div>
+  </article>`;
+}
+
+/* ---------------- tamanho do usuário (lembrado entre visitas) ----------------
+   Guardamos o último tamanho escolhido por categoria. Assim o botão
+   "Adicionar" direto no card usa a medida habitual da pessoa.            */
+const SIZE_KEY = 'vl_sizes';
+function loadSizePrefs() {
+  try { return JSON.parse(localStorage.getItem(SIZE_KEY) || '{}'); } catch (e) { return {}; }
+}
+function rememberSize(cat, size) {
+  if (!cat || !size || size === 'Único') return;
+  try {
+    const prefs = loadSizePrefs();
+    prefs[cat] = size;
+    prefs.last = size;
+    prefs.updatedAt = new Date().toISOString();
+    localStorage.setItem(SIZE_KEY, JSON.stringify(prefs));
+  } catch (e) {}
+}
+function hasSizePref(p) {
+  if (!p || p.cat === 'acessorios') return false;
+  const prefs = loadSizePrefs();
+  return SIZES.includes(prefs[p.cat]) || SIZES.includes(prefs.last);
+}
+function preferredSize(p) {
+  if (!p) return 'M';
+  if (p.cat === 'acessorios') return 'Único';
+  const prefs = loadSizePrefs();
+  const size = prefs[p.cat] || prefs.last;
+  return SIZES.includes(size) ? size : 'M';
 }
 
 /* ---------------- carrinho (compartilhado) ---------------- */

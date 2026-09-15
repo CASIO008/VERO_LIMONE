@@ -1,5 +1,5 @@
 /* ============================================================
-   VERO LIMONE — camada de movimento (GSAP)
+   DAVVERO LIMONE — camada de movimento (GSAP)
    Aprimora a loja e o checkout. Sem GSAP, ou com
    "reduzir movimento" ativo, nada aqui roda e o site
    continua funcionando normalmente.
@@ -55,7 +55,8 @@
     if ($('.hero-sub')) tl.from('.hero-sub', { y: 18, autoAlpha: 0, duration: 0.7 }, '-=0.55');
     if ($('.hero-cta')) tl.from('.hero-cta', { y: 18, autoAlpha: 0, duration: 0.7 }, '-=0.55');
     if ($('.hero-note')) tl.from('.hero-note', { y: 14, autoAlpha: 0, duration: 0.6 }, '-=0.55');
-    if ($('.hero-stage')) tl.from('.hero-stage', { autoAlpha: 0, y: 30, scale: 0.96, duration: 1 }, '-=0.95');
+    /* só um fade: o limão e o palco não se movem no carregamento */
+    if ($('.hero-stage')) tl.from('.hero-stage', { autoAlpha: 0, duration: 0.9 }, '-=0.95');
     if ($('.float-tag')) tl.from('.float-tag', { autoAlpha: 0, y: 16, scale: 0.82, stagger: 0.08, duration: 0.5 }, '-=0.6');
     if ($('.stats')) tl.from('.stats', { autoAlpha: 0, y: 24, duration: 0.8 }, '-=0.5');
   }
@@ -137,6 +138,6 @@
     cardTilt();
     scrollParallax();
     checkoutMotion();
-    magnetize('.hero-cta .btn, .header-actions .cart-btn, .theme-toggle, .lb-nav .lb-btn, .ig-cta .btn, .ck-actions .btn, .ck-sum-card .btn');
+    magnetize('.hero-cta .btn, .lb-nav .lb-btn, .ig-cta .btn');
   });
 })();
