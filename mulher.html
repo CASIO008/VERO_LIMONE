@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#FAF8F1" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#100F0C" media="(prefers-color-scheme: dark)" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Feminino — DAVVERO LIMONE</title>
+  <meta name="description" content="Departamento feminino DAVVERO LIMONE: camisetas oversized, moletons macios, calças amplas e prata 925. Filtre por tipo de roupa." />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet" />
+  <script>
+    (function () {
+      try {
+        var root = document.documentElement;
+        var saved = localStorage.getItem('vl_theme');
+        if (saved === 'light' || saved === 'dark') {
+          root.dataset.theme = saved;
+          root.style.colorScheme = saved;
+        } else {
+          root.dataset.theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="pages.css" />
+</head>
+<body class="pd-body" data-page="departamento" data-gender="mulher">
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ============ HEADER ============ -->
+  <header class="ck-header">
+    <div class="announce">
+      <div class="wrap announce-inner">
+        <span>Frete grátis acima de R$ 199</span>
+        <span class="announce-dot" aria-hidden="true">•</span>
+        <span>5% off no Pix</span>
+        <span class="announce-dot" aria-hidden="true">•</span>
+        <span>Troca em 7 dias</span>
+      </div>
+    </div>
+    <div class="wrap ck-header-inner ck-header--center">
+      <div class="pg-left">
+        <nav class="pg-nav" aria-label="Navegação">
+          <a href="index.html">Início</a>
+          <a href="homem.html">Masculino</a>
+          <a href="mulher.html" class="is-active">Feminino</a>
+          <a href="sobre.html">Sobre</a>
+          <a href="contato.html">Contato</a>
+        </nav>
+        <button class="burger" id="burger" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span></button>
+      </div>
+      <a class="brand brand--center" href="index.html" aria-label="DAVVERO LIMONE — voltar para a loja">
+        <span class="brand-mark" data-mark></span>
+        <span class="brand-lockup" data-lockup></span>
+      </a>
+      <div class="ck-head-actions">
+        <a class="cart-btn acc-btn" href="conta.html" aria-label="Minha conta" title="Minha conta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.4" r="3.6"/><path d="M4.8 20a7.2 7.2 0 0 1 14.4 0"/></svg>
+          <span class="acc-dot" hidden aria-hidden="true"></span>
+        </a>
+        <a class="cart-btn" href="checkout.html" aria-label="Ir para o carrinho">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H8.8a1.6 1.6 0 0 1-1.6-1.4L6 8Z"/><path d="M9 10V6.5a3 3 0 0 1 6 0V10"/></svg>
+          <span class="cart-count zero" id="pageCartCount">0</span>
+        </a>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Alternar tema claro e escuro" aria-pressed="false">
+          <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+          <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- ============ MOBILE MENU ============ -->
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div class="mobile-mark" data-mark></div>
+    <nav aria-label="Menu">
+      <a href="index.html">Início</a>
+      <a href="homem.html">Masculino</a>
+      <a href="mulher.html">Feminino</a>
+      <a href="sobre.html">Sobre</a>
+      <a href="contato.html">Contato</a>
+      <a href="index.html#colecao">Coleção</a>
+      <a href="index.html#lookbook">Lookbook</a>
+      <a href="conta.html">Minha conta</a>
+    </nav>
+    <div class="mobile-foot">
+      <span>@davverolimone</span>
+      <span>street basics · masculino e feminino</span>
+    </div>
+  </div>
+
+
+  <main class="dp-main">
+    <!-- ============ BANNER ============ -->
+    <section class="dp-hero" style="--dp-img:url('images/look-street-1.jpg')">
+      <span class="dp-hero-bg" aria-hidden="true"></span>
+      <div class="wrap">
+        <p class="eyebrow">Feminino</p>
+        <h1>Para Elas</h1>
+        <p>Camisetas oversized, moletons macios, calças amplas e prata 925 — caimento pensado para vestir bem de verdade.</p>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <div class="dp-tools">
+        <span class="dp-count" id="dpCount">—</span>
+        <label class="sort-wrap">
+          <span class="sort-label">Ordenar</span>
+          <select class="sort-select" id="dpSort" aria-label="Ordenar produtos">
+            <option value="relevancia">Relevância</option>
+            <option value="novidades">Novidades</option>
+            <option value="menor">Menor preço</option>
+            <option value="maior">Maior preço</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="filters" id="dpFilters" role="group" aria-label="Filtrar produtos"></div>
+      <div class="grid" id="dpGrid"></div>
+
+      <p class="dp-note">Peças unissex aparecem aqui e também no <a href="homem.html">Masculino</a> — o corte é o mesmo, a escolha é sua.</p>
+    </div>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div class="footer-brand">
+        <span class="footer-mark" data-mark></span>
+        <div>
+          <span class="brand-lockup footer-lockup" data-lockup></span>
+          <p>Street basics feitos para durar — do rolê ao treino.</p>
+          <p class="footer-contact">
+            <a href="mailto:contato@davverolimone.com.br">contato@davverolimone.com.br</a><br>
+            <a href="https://wa.me/5511999991234" target="_blank" rel="noopener">(11) 99999-1234</a>
+          </p>
+        </div>
+      </div>
+
+      <nav class="footer-col" aria-label="Loja">
+        <h4>Loja</h4>
+        <a href="index.html#colecao">Todos os produtos</a>
+        <a href="homem.html">Masculino</a>
+        <a href="mulher.html">Feminino</a>
+        <a href="index.html#lookbook">Lookbook</a>
+      </nav>
+
+      <nav class="footer-col" aria-label="Ajuda">
+        <h4>Ajuda</h4>
+        <a href="contato.html">Central de atendimento</a>
+        <a href="contato.html#trocas">Trocas e devoluções</a>
+        <a href="contato.html#tamanhos">Guia de tamanhos</a>
+        <a href="contato.html#prazos">Frete e prazos</a>
+      </nav>
+
+      <nav class="footer-col" aria-label="Ateliê">
+        <h4>Ateliê</h4>
+        <a href="sobre.html">Sobre a marca</a>
+        <a href="index.html#qualidade">Nossos tecidos</a>
+        <a href="index.html#qualidade">Prata 925</a>
+        <a href="index.html#lookbook">Lookbook</a>
+      </nav>
+
+      <div class="footer-col social" aria-label="Redes sociais">
+        <h4>Social</h4>
+        <a href="https://instagram.com/davverolimone" target="_blank" rel="noopener">Instagram</a>
+        <a href="contato.html">TikTok</a>
+        <a href="contato.html">Pinterest</a>
+      </div>
+    </div>
+
+    <div class="wrap footer-pay">
+      <span class="footer-pay-label">Formas de pagamento</span>
+      <ul class="pay-list">
+        <li><img src="images/pay/visa.svg" alt="Visa" width="54" height="37" loading="lazy" decoding="async"></li>
+        <li><img src="images/pay/mastercard.svg" alt="Mastercard" width="54" height="37" loading="lazy" decoding="async"></li>
+        <li><img src="images/pay/elo.svg" alt="Elo" width="54" height="37" loading="lazy" decoding="async"></li>
+        <li><img src="images/pay/amex.svg" alt="Amex" width="54" height="37" loading="lazy" decoding="async"></li>
+        <li><img src="images/pay/hipercard.svg" alt="Hipercard" width="54" height="37" loading="lazy" decoding="async"></li>
+        <li><img src="images/pay/pix.svg" alt="Pix" width="54" height="37" loading="lazy" decoding="async"></li>
+        <li><img src="images/pay/boleto.svg" alt="Boleto" width="54" height="37" loading="lazy" decoding="async"></li>
+      </ul>
+    </div>
+
+    <div class="wrap footer-bottom">
+      <span>© 2026 DAVVERO LIMONE · CNPJ 12.345.678/0001-90</span>
+      <span>"Eu te exaltarei, ó Deus, rei meu, e bendirei o teu nome pelos séculos dos séculos e para sempre". Salmo 145:1</span>
+      <span>Feito com ❤️ e 🍋</span>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"><span></span></div>
+
+  <script src="data.js"></script>
+  <script src="pages.js"></script>
+  <script src="theme.js"></script>
+</body>
+</html>

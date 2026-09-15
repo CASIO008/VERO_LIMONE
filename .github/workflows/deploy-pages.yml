@@ -1,0 +1,78 @@
+# ============================================================
+#  DAVVERO LIMONE — publicação no GitHub Pages
+#  ------------------------------------------------------------
+#  Publica a vitrine estática (sem o servidor Node) a cada push
+#  na branch main. O link fica:
+#    https://casio008.github.io/VERO_LIMONE/
+#
+#  Primeira vez: em Settings → Pages, escolha "GitHub Actions"
+#  como Source (ou deixe que o passo configure-pages faça isso).
+#
+#  No Pages a loja roda no "modo local": conta, cartões, sacola e
+#  pedidos ficam no armazenamento do próprio navegador. O servidor
+#  Node (server/server.js) continua opcional para rodar em casa.
+# ============================================================
+name: Publicar loja (GitHub Pages)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Montar o site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Checar o JavaScript (colisões de escopo)
+        run: node tools/check-globals.js
+
+      - name: Montar a pasta _site (somente o site estático)
+        run: |
+          mkdir -p _site
+          rsync -a \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude '_site' \
+            --exclude 'server' \
+            --exclude 'sql' \
+            --exclude 'tools' \
+            --exclude 'node_modules' \
+            --exclude '*.cmd' \
+            --exclude 'README.md' \
+            ./ _site/
+          touch _site/.nojekyll
+
+      - name: Configurar o Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Enviar o artefato
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    name: Publicar
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

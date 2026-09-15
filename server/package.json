@@ -1,0 +1,14 @@
+{
+  "name": "vero-limone-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Backend zero-dependência (node:sqlite) para conta, cofre de cartões e pedidos da DAVVERO LIMONE.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22.5"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "reset": "node server.js --reset"
+  }
+}

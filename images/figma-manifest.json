@@ -1,0 +1,99 @@
+{
+  "geradoEm": "2026-09-14T15:10:23.420Z",
+  "fonte": "Figma · community files (uso ilustrativo; marcas dos respectivos titulares)",
+  "arquivos": {
+    "banks": {
+      "arquivo": "VsNHqohTGryioLOQIn8wuN",
+      "pasta": "images/banks",
+      "itens": [
+        "nubank",
+        "itau",
+        "bradesco",
+        "santander",
+        "btg",
+        "safra",
+        "inter",
+        "original",
+        "c6",
+        "pagbank",
+        "mercadopago",
+        "next",
+        "iti",
+        "neon",
+        "will",
+        "picpay",
+        "stone",
+        "nomad",
+        "efi",
+        "bb",
+        "caixa",
+        "bndes",
+        "sicoob",
+        "sicredi",
+        "unicred",
+        "credisis",
+        "lar",
+        "cresol",
+        "viacredi",
+        "sisprime",
+        "crediseara",
+        "uniprime",
+        "banrisul",
+        "bnb",
+        "brb",
+        "basa",
+        "banestes",
+        "banese",
+        "banpara",
+        "bdmg",
+        "brde"
+      ]
+    },
+    "brands": {
+      "arquivo": "sa1R6gkO1cWLP2ziZlDLBc",
+      "pasta": "images/brands",
+      "itens": [
+        "visa",
+        "mastercard",
+        "amex"
+      ]
+    },
+    "pay": {
+      "arquivo": "sa1R6gkO1cWLP2ziZlDLBc",
+      "pasta": "images/pay",
+      "itens": [
+        "pix",
+        "hotmart",
+        "applepay",
+        "googlepay",
+        "paypal",
+        "mastercard",
+        "amex",
+        "visa",
+        "boleto"
+      ]
+    },
+    "refcards": {
+      "arquivo": "G6X5qPDyLwY5wXwQ8prIH6",
+      "pasta": "images/ref",
+      "itens": [
+        "ui-cards-stack",
+        "ui-card-thumb"
+      ]
+    },
+    "refpay": {
+      "arquivo": "sa1R6gkO1cWLP2ziZlDLBc",
+      "pasta": "images/ref",
+      "itens": [
+        "hotmart-strip-a",
+        "hotmart-strip-b"
+      ]
+    }
+  },
+  "resultado": {
+    "pay": {
+      "done": 9,
+      "skipped": 0
+    }
+  }
+}

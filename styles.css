@@ -231,15 +231,30 @@ ul{ list-style:none; }
 /* ---------- loader ---------- */
 .loader{
   position:fixed; inset:0; z-index:1000;
-  background:var(--cream);
+  background:#0E0D0A;
+  color:#FAF8F1;
   display:grid; place-items:center;
   transition:opacity .7s var(--ease), visibility .7s;
 }
 .loader.done{ opacity:0; visibility:hidden; }
 .loader-inner{ display:flex; flex-direction:column; align-items:center; gap:1.4rem; }
+.loader-media{ position:relative; display:grid; place-items:center; width:152px; height:152px; }
 .loader-mark{ width:96px; }
 /* o símbolo entra inteiro, num fade curto — sem desenho trêmulo */
 #loader .loader-mark svg{ opacity:0; animation:fadeIn .5s .08s var(--ease) forwards; }
+
+/* limão animado (vídeo) como loading — o fundo preto do vídeo
+   some com lighten, funcionando no tema claro e no escuro */
+.loader-lemon{
+  grid-area:1 / 1;
+  width:152px;
+  mix-blend-mode:lighten;
+  opacity:0;
+  transition:opacity .3s var(--ease);
+  pointer-events:none;
+}
+.loader.video-ready .loader-lemon{ opacity:1; }
+.loader.video-ready .loader-mark{ opacity:0; visibility:hidden; }
 @keyframes fadeIn{ to{ opacity:1; } }
 .loader-word{
   font-family:var(--font-display);

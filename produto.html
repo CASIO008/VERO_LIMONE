@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#FAF8F1" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#100F0C" media="(prefers-color-scheme: dark)" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Produto — DAVVERO LIMONE</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet" />
+  <script>
+    (function () {
+      try {
+        var root = document.documentElement;
+        var saved = localStorage.getItem('vl_theme');
+        if (saved === 'light' || saved === 'dark') {
+          root.dataset.theme = saved;
+          root.style.colorScheme = saved;
+        } else {
+          root.dataset.theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="pd-body">
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ============ HEADER ============ -->
+  <header class="ck-header">
+    <div class="announce">
+      <div class="wrap announce-inner">
+        <span>Frete grátis acima de R$ 199</span>
+        <span class="announce-dot" aria-hidden="true">•</span>
+        <span>5% off no Pix</span>
+        <span class="announce-dot" aria-hidden="true">•</span>
+        <span>Troca em 7 dias</span>
+      </div>
+    </div>
+    <div class="wrap ck-header-inner ck-header--center">
+      <nav class="pd-nav" aria-label="Navegação">
+        <a href="index.html#colecao">Coleção</a>
+        <a href="index.html#categorias">Categorias</a>
+        <a href="index.html#sobre">Sobre</a>
+      </nav>
+      <a class="brand brand--center" href="index.html" aria-label="DAVVERO LIMONE — voltar para a loja">
+        <span class="brand-mark" data-mark></span>
+        <span class="brand-lockup" data-lockup></span>
+      </a>
+      <div class="ck-head-actions">
+        <a class="ck-back" href="index.html"><span class="arr">←</span> Voltar para a loja</a>
+        <a class="cart-btn acc-btn" href="conta.html" aria-label="Minha conta" title="Minha conta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.4" r="3.6"/><path d="M4.8 20a7.2 7.2 0 0 1 14.4 0"/></svg>
+          <span class="acc-dot" hidden aria-hidden="true"></span>
+        </a>
+        <a class="cart-btn" href="checkout.html" aria-label="Ir para o carrinho">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H8.8a1.6 1.6 0 0 1-1.6-1.4L6 8Z"/><path d="M9 10V6.5a3 3 0 0 1 6 0V10"/></svg>
+          <span class="cart-count zero" id="pdCartCount">0</span>
+        </a>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Alternar tema claro e escuro" aria-pressed="false">
+          <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+          <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="pd-main" id="pdMain">
+    <div class="pd-shell">
+      <!-- ---------- GALERIA: foto lateral + produto ---------- -->
+      <div class="pd-media">
+        <figure class="pd-pane pd-pane--side" id="pdPaneSide"></figure>
+        <figure class="pd-pane pd-pane--main">
+          <div class="pd-stage" id="pdStage" aria-live="polite"></div>
+          <div class="pd-thumbs" id="pdThumbs" role="group" aria-label="Fotos do produto"></div>
+        </figure>
+      </div>
+
+      <!-- ---------- INFO ---------- -->
+      <div class="pd-info">
+        <h1 class="pd-name" id="pdName">Produto</h1>
+
+        <div class="pd-price-row">
+          <div class="pd-price">
+            <s id="pdOld" hidden></s>
+            <strong id="pdPrice">R$ 0,00</strong>
+            <span class="pd-off" id="pdOff" hidden></span>
+          </div>
+          <p class="pd-install" id="pdInstall"></p>
+        </div>
+        <p class="pd-pix" id="pdPix"></p>
+
+        <div class="pd-promo">
+          <div class="pd-promo-copy">
+            <span class="pd-promo-eyebrow">DAVVERO LIMONE · AW'26</span>
+            <strong>Frete grátis acima de R$ 199 e 5% off no Pix.</strong>
+            <div class="pd-promo-tags">
+              <span>Frete grátis</span><span>5% no Pix</span>
+            </div>
+          </div>
+          <span class="pd-promo-mark" data-mark data-size="30" aria-hidden="true"></span>
+        </div>
+
+        <div class="pd-opt">
+          <span class="pd-opt-label">Cor: <em id="pdColorName">—</em></span>
+          <span class="pd-swatch" id="pdSwatch"></span>
+        </div>
+
+        <div class="pd-opt">
+          <div class="pd-opt-head">
+            <span class="pd-opt-label">Tamanho: <em id="pdSizeName">—</em></span>
+            <button class="pd-sizeguide" id="pdSizeBtn" type="button">Ver medidas</button>
+          </div>
+          <div class="pd-sizes" id="pdSizes" role="group" aria-label="Escolher tamanho"></div>
+        </div>
+
+        <div class="pd-actions">
+          <div class="qty" aria-label="Quantidade">
+            <button id="pdQtyMinus" type="button" aria-label="Diminuir">−</button>
+            <span id="pdQtyVal">1</span>
+            <button id="pdQtyPlus" type="button" aria-label="Aumentar">+</button>
+          </div>
+          <button class="btn btn-dark full" id="pdAdd" type="button">Adicionar ao carrinho</button>
+        </div>
+
+        <div class="pd-acc">
+          <details open>
+            <summary>Descrição</summary>
+            <p id="pdDesc"></p>
+          </details>
+          <details>
+            <summary>Especificações</summary>
+            <ul id="pdSpecs"></ul>
+          </details>
+          <details>
+            <summary>Entrega e trocas</summary>
+            <p>Enviamos para todo o Brasil em até 48h úteis após a confirmação do pagamento. Você tem até 7 dias corridos após o recebimento para trocar ou desistir da compra — a análise leva até 5 dias úteis.</p>
+          </details>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <!-- ---------- COMPLETE O LOOK ---------- -->
+      <section class="pd-related" aria-label="Complete o look">
+        <div class="pd-related-head">
+          <h2>Complete o look</h2>
+          <a href="index.html#colecao">Ver coleção <span class="arr">→</span></a>
+        </div>
+        <div class="pd-related-grid" id="pdRelated"></div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ============ TABELA DE MEDIDAS ============ -->
+  <div class="modal" id="sizeModal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Guia de medidas">
+    <div class="modal-card pd-sizecard">
+      <button class="icon-x modal-close" id="sizeClose" aria-label="Fechar">✕</button>
+      <h3>Guia de medidas</h3>
+      <p class="pd-sizesub">Medidas da peça (largura × comprimento), em centímetros.</p>
+      <div class="pd-sizetable" id="pdSizeTable"></div>
+      <p class="pd-sizehint">Na dúvida entre dois tamanhos, escolha o maior para o caimento oversized.</p>
+    </div>
+  </div>
+
+  <footer class="ck-footer">
+    <div class="wrap">
+      <span>© 2026 DAVVERO LIMONE · CNPJ 12.345.678/0001-90</span>
+      <span><a href="contato.html">Central de atendimento</a> · Ambiente demonstrativo — nenhum pagamento é processado.</span>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"><span></span></div>
+
+  <script src="data.js"></script>
+  <script src="auth.js"></script>
+  <script src="produto.js"></script>
+  <script src="theme.js"></script>
+</body>
+</html>

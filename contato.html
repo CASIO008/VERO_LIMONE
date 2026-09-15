@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#FAF8F1" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#100F0C" media="(prefers-color-scheme: dark)" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Atendimento e contato — DAVVERO LIMONE</title>
+  <meta name="description" content="Fale com o time DAVVERO LIMONE: e-mail, WhatsApp, Instagram e horário de atendimento. Tire dúvidas de trocas, tamanhos, fretes e pedidos." />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet" />
+  <script>
+    (function () {
+      try {
+        var root = document.documentElement;
+        var saved = localStorage.getItem('vl_theme');
+        if (saved === 'light' || saved === 'dark') {
+          root.dataset.theme = saved;
+          root.style.colorScheme = saved;
+        } else {
+          root.dataset.theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="pages.css" />
+</head>
+<body class="pd-body" data-page="contato">
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ============ HEADER ============ -->
+  <header class="ck-header">
+    <div class="announce">
+      <div class="wrap announce-inner">
+        <span>Frete grátis acima de R$ 199</span>
+        <span class="announce-dot" aria-hidden="true">•</span>
+        <span>5% off no Pix</span>
+        <span class="announce-dot" aria-hidden="true">•</span>
+        <span>Troca em 7 dias</span>
+      </div>
+    </div>
+    <div class="wrap ck-header-inner ck-header--center">
+      <div class="pg-left">
+        <nav class="pg-nav" aria-label="Navegação">
+          <a href="index.html">Início</a>
+          <a href="homem.html">Masculino</a>
+          <a href="mulher.html">Feminino</a>
+          <a href="sobre.html">Sobre</a>
+          <a href="contato.html" class="is-active">Contato</a>
+        </nav>
+        <button class="burger" id="burger" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span></button>
+      </div>
+      <a class="brand brand--center" href="index.html" aria-label="DAVVERO LIMONE — voltar para a loja">
+        <span class="brand-mark" data-mark></span>
+        <span class="brand-lockup" data-lockup></span>
+      </a>
+      <div class="ck-head-actions">
+        <a class="cart-btn acc-btn" href="conta.html" aria-label="Minha conta" title="Minha conta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.4" r="3.6"/><path d="M4.8 20a7.2 7.2 0 0 1 14.4 0"/></svg>
+          <span class="acc-dot" hidden aria-hidden="true"></span>
+        </a>
+        <a class="cart-btn" href="checkout.html" aria-label="Ir para o carrinho">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H8.8a1.6 1.6 0 0 1-1.6-1.4L6 8Z"/><path d="M9 10V6.5a3 3 0 0 1 6 0V10"/></svg>
+          <span class="cart-count zero" id="pageCartCount">0</span>
+        </a>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Alternar tema claro e escuro" aria-pressed="false">
+          <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+          <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- ============ MOBILE MENU ============ -->
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div class="mobile-mark" data-mark></div>
+    <nav aria-label="Menu">
+      <a href="index.html">Início</a>
+      <a href="homem.html">Masculino</a>
+      <a href="mulher.html">Feminino</a>
+      <a href="sobre.html">Sobre</a>
+      <a href="contato.html">Contato</a>
+      <a href="index.html#colecao">Coleção</a>
+      <a href="index.html#lookbook">Lookbook</a>
+      <a href="conta.html">Minha conta</a>
+    </nav>
+    <div class="mobile-foot">
+      <span>@davverolimone</span>
+      <span>street basics · masculino e feminino</span>
+    </div>
+  </div>
+
+
+  <main class="ct-main">
+    <section class="ct-hero">
+      <div class="wrap">
+        <p class="eyebrow">Atendimento</p>
+        <h1>Fale com o nosso time</h1>
+        <p>Dúvidas sobre peças, tamanhos, pedidos ou trocas? Manda a mensagem — a gente responde de verdade, de segunda a sábado.</p>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <div class="ct-grid">
+        <!-- ---------- FORMULÁRIO ---------- -->
+        <section class="ct-card" aria-label="Enviar mensagem">
+          <h2>Enviar mensagem</h2>
+          <p>Preencha os campos abaixo e o time de atendimento responde no seu e-mail em até 1 dia útil.</p>
+
+          <form class="ct-form" id="ctForm" novalidate>
+            <div class="ct-row">
+              <label class="ct-field">
+                <span>Seu nome</span>
+                <input type="text" id="ctName" name="name" placeholder="Como podemos te chamar?" autocomplete="name" required />
+              </label>
+              <label class="ct-field">
+                <span>Seu e-mail</span>
+                <input type="email" id="ctEmail" name="email" placeholder="seu@email.com" autocomplete="email" required />
+              </label>
+            </div>
+
+            <div class="ct-row">
+              <label class="ct-field">
+                <span>Assunto</span>
+                <select id="ctSubject" name="subject">
+                  <option>Dúvida sobre um produto</option>
+                  <option>Meu pedido</option>
+                  <option>Trocas e devoluções</option>
+                  <option>Guia de tamanhos</option>
+                  <option>Frete e prazos</option>
+                  <option>Parcerias e imprensa</option>
+                  <option>Outro assunto</option>
+                </select>
+              </label>
+              <label class="ct-field">
+                <span>Nº do pedido <em class="ct-hint">(opcional)</em></span>
+                <input type="text" id="ctOrder" name="order" placeholder="Ex.: VL-10293" />
+              </label>
+            </div>
+
+            <label class="ct-field">
+              <span>Mensagem</span>
+              <textarea id="ctMessage" name="message" placeholder="Conte com detalhes o que você precisa — se for sobre uma peça, diga o nome ou o tamanho." required></textarea>
+            </label>
+
+            <p class="ct-hint">Ao enviar, você concorda em receber a resposta no e-mail informado. Nenhum dado é compartilhado com terceiros.</p>
+            <button class="btn btn-dark full" type="submit">Enviar mensagem</button>
+          </form>
+        </section>
+
+        <!-- ---------- CANAIS ---------- -->
+        <aside aria-label="Canais de atendimento">
+          <div class="ct-info">
+            <div class="ct-item">
+              <span class="ct-ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.7a8.5 8.5 0 0 1-12.6 7.4L3.5 20.5l1.4-4.3A8.5 8.5 0 1 1 20.5 11.7Z"/><path d="M8.4 9.2c.3-.7.6-1 1.1-1h.7c.3 0 .5.2.6.5l.5 1.3c.1.3 0 .6-.2.8l-.6.5c.5 1 1.3 1.8 2.3 2.3l.5-.6c.2-.2.5-.3.8-.2l1.3.5c.3.1.5.4.5.7v.7c0 .5-.4.8-1 1.1-2.5.2-6.7-4.5-6.5-6.6Z"/></svg>
+              </span>
+              <div>
+                <strong>WhatsApp e telefone</strong>
+                <a href="https://wa.me/5511999991234" target="_blank" rel="noopener">(11) 99999-1234</a>
+                <span>Atendimento de seg. a sáb., em horário comercial.</span>
+              </div>
+            </div>
+
+            <div class="ct-item">
+              <span class="ct-ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.6"/><path d="m4 7 8 5.6L20 7"/></svg>
+              </span>
+              <div>
+                <strong>E-mail</strong>
+                <a href="mailto:contato@davverolimone.com.br">contato@davverolimone.com.br</a>
+                <span>Resposta em até 1 dia útil.</span>
+              </div>
+            </div>
+
+            <div class="ct-item">
+              <span class="ct-ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+              </span>
+              <div>
+                <strong>Instagram</strong>
+                <a href="https://instagram.com/davverolimone" target="_blank" rel="noopener">@davverolimone</a>
+                <span>Bastidores, lançamentos e atendimento por DM.</span>
+              </div>
+            </div>
+
+            <div class="ct-item">
+              <span class="ct-ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>
+              </span>
+              <div>
+                <strong>Horário de atendimento</strong>
+                <span>Segunda a sexta, das 9h às 18h.</span>
+                <span>Sábado, das 9h às 13h.</span>
+              </div>
+            </div>
+
+            <div class="ct-item">
+              <span class="ct-ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+              </span>
+              <div>
+                <strong>Ateliê</strong>
+                <span>São Paulo · SP — endereço enviado com o pedido.</span>
+                <span>CNPJ 12.345.678/0001-90 (fictício).</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ct-social">
+            <a class="btn btn-ghost sm" href="https://wa.me/5511999991234" target="_blank" rel="noopener">Chamar no WhatsApp</a>
+            <a class="btn btn-ghost sm" href="mailto:contato@davverolimone.com.br">Enviar e-mail</a>
+          </div>
+        </aside>
+      </div>
+
+      <!-- ---------- CENTRAL DE AJUDA ---------- -->
+      <section class="ct-faq" aria-label="Perguntas frequentes">
+        <h2 class="section-title" style="font-size:clamp(1.6rem,3vw,2.2rem); margin-bottom:.6rem">Central de ajuda</h2>
+
+        <details id="trocas" open>
+          <summary>Trocas e devoluções</summary>
+          <p>Você tem até 7 dias corridos após o recebimento para pedir troca ou desistência, conforme o Código de Defesa do Consumidor. A peça precisa estar sem uso, com etiqueta e embalagem originais. A primeira troca é por nossa conta; a análise do pedido leva até 5 dias úteis.</p>
+        </details>
+
+        <details id="tamanhos">
+          <summary>Guia de tamanhos</summary>
+          <p>As peças de topo têm caimento amplo: PP ao GG com ombro caído. Na dúvida entre dois tamanhos, escolha o maior — e confira a tabela de medidas na página de cada produto, no botão “Ver medidas”. Acessórios são de tamanho único, com ajuste.</p>
+        </details>
+
+        <details id="prazos">
+          <summary>Frete e prazos</summary>
+          <p>Frete grátis acima de R$ 199 para todo o Brasil. Pedidos confirmados saem do ateliê em até 48h úteis. Pix e cartão aprovam na hora; boleto leva até 3 dias úteis para compensar. Você acompanha tudo pela página da sua conta.</p>
+        </details>
+
+        <details id="pedidos">
+          <summary>Meu pedido</summary>
+          <p>Entre na sua <a href="conta.html">conta</a> para ver o status, rastrear a entrega e repetir uma compra. Se preferir, mande o número do pedido pelo WhatsApp ou pelo formulário acima e a gente verifica para você.</p>
+        </details>
+
+        <details id="pagamento">
+          <summary>Formas de pagamento</summary>
+          <p>Aceitamos Visa, Mastercard, Elo, Amex e Hipercard em até 12x, além de Pix com 5% de desconto e boleto bancário. O nome do titular precisa ser o mesmo do documento informado no pedido.</p>
+        </details>
+      </section>
+    </div>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div class="footer-brand">
+        <span class="footer-mark" data-mark></span>
+        <div>
+          <span class="brand-lockup footer-lockup" data-lockup></span>
+          <p>Street basics feitos para durar — do rolê ao treino.</p>
+          <p class="footer-contact">
+            <a href="mailto:contato@davverolimone.com.br">contato@davverolimone.com.br</a><br>
+            <a href="https://wa.me/5511999991234" target="_blank" rel="noopener">(11) 99999-1234</a>
+          </p>
+        </div>
+      </div>
+
+      <nav class="footer-col" aria-label="Loja">
+        <h4>Loja</h4>
+        <a href="index.html#colecao">Todos os produtos</a>
+        <a href="homem.html">Masculino</a>
+        <a href="mulher.html">Feminino</a>
+        <a href="index.html#lookbook">Lookbook</a>
+      </nav>
+
+      <nav class="footer-col" aria-label="Ajuda">
+        <h4>Ajuda</h4>
+        <a href="contato.html">Central de atendimento</a>
+        <a href="contato.html#trocas">Trocas e devoluções</a>
+        <a href="contato.html#tamanhos">Guia de tamanhos</a>
+        <a href="contato.html#prazos">Frete e prazos</a>
+      </nav>
+
+      <nav class="footer-col" aria-label="Ateliê">
+        <h4>Ateliê</h4>
+        <a href="sobre.html">Sobre a marca</a>
+        <a href="index.html#qualidade">Nossos tecidos</a>
+        <a href="index.html#qualidade">Prata 925</a>
+        <a href="index.html#lookbook">Lookbook</a>
+      </nav>
+
+      <div class="footer-col social" aria-label="Redes sociais">
+        <h4>Social</h4>
+        <a href="https://instagram.com/davverolimone" target="_blank" rel="noopener">Instagram</a>
+        <a href="contato.html">TikTok</a>
+        <a href="contato.html">Pinterest</a>
+      </div>
+    </div>
+
+    <div class="wrap footer-pay">
+      <span class="footer-pay-label">Formas de pagamento</span>
+      <ul class="pay-list">
+        <li><img src="images/pay/visa.svg" alt="Visa" width="54" height="37" loading="lazy" decoding="async"></li>
+        <li><img src="images/pay/mastercard.svg" alt="Mastercard" width="54" height="37" loading="lazy" decoding="async"></li>
+        <li><img src="images/pay/elo.svg" alt="Elo" width="54" height="37" loading="lazy" decoding="async"></li>
+        <li><img src="images/pay/amex.svg" alt="Amex" width="54" height="37" loading="lazy" decoding="async"></li>
+        <li><img src="images/pay/hipercard.svg" alt="Hipercard" width="54" height="37" loading="lazy" decoding="async"></li>
+        <li><img src="images/pay/pix.svg" alt="Pix" width="54" height="37" loading="lazy" decoding="async"></li>
+        <li><img src="images/pay/boleto.svg" alt="Boleto" width="54" height="37" loading="lazy" decoding="async"></li>
+      </ul>
+    </div>
+
+    <div class="wrap footer-bottom">
+      <span>© 2026 DAVVERO LIMONE · CNPJ 12.345.678/0001-90</span>
+      <span>"Eu te exaltarei, ó Deus, rei meu, e bendirei o teu nome pelos séculos dos séculos e para sempre". Salmo 145:1</span>
+      <span>Feito com ❤️ e 🍋</span>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"><span></span></div>
+
+  <script src="data.js"></script>
+  <script src="pages.js"></script>
+  <script src="theme.js"></script>
+</body>
+</html>

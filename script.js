@@ -539,9 +539,20 @@ $('#newsForm').addEventListener('submit', e => {
 
 /* ---------------- loader ---------------- */
 (function loader() {
-  const MIN = 950;
+  const MIN = 1600;
   const t0 = performance.now();
   let done = false;
+
+  /* limão em vídeo: roda no loader e substitui o símbolo quando pronto */
+  const video = $('.loader-lemon');
+  if (video) {
+    const ready = () => $('#loader').classList.add('video-ready');
+    if (video.readyState >= 2) ready();
+    else video.addEventListener('loadeddata', ready, { once: true });
+    const p = video.play();
+    if (p && p.catch) p.catch(() => {});
+  }
+
   function finish() {
     if (done) return;
     done = true;
@@ -549,6 +560,7 @@ $('#newsForm').addEventListener('submit', e => {
     setTimeout(() => {
       $('#loader').classList.add('done');
       document.body.classList.remove('is-loading');
+      if (video) video.pause();
     }, wait);
   }
   if (document.readyState === 'complete') finish();

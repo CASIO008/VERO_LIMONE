@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#FAF8F1" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#100F0C" media="(prefers-color-scheme: dark)" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Minha conta — DAVVERO LIMONE</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet" />
+  <script>
+    (function () {
+      try {
+        var root = document.documentElement;
+        var saved = localStorage.getItem('vl_theme');
+        if (saved === 'light' || saved === 'dark') { root.dataset.theme = saved; root.style.colorScheme = saved; }
+        else { root.dataset.theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="pay.css" />
+</head>
+<body class="ck-body acc-body">
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="ck-header">
+    <div class="wrap ck-header-inner ck-header--center">
+      <a class="ck-back" href="index.html"><span class="arr">←</span> Voltar para a loja</a>
+      <a class="brand brand--center" href="index.html" aria-label="DAVVERO LIMONE — voltar para a loja">
+        <span class="brand-mark" data-mark></span>
+        <span class="brand-lockup" data-lockup></span>
+      </a>
+      <div class="ck-head-actions">
+        <span class="acc-mode" id="accMode" title="Onde seus dados estão guardados"></span>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Alternar tema claro e escuro" aria-pressed="false">
+          <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+          <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="acc-main">
+    <div class="wrap">
+
+      <!-- ================= DESLOGADO: entrar / criar conta ================= -->
+      <section class="acc-guest" id="accGuest" hidden>
+        <div class="acc-guest-grid">
+
+          <div class="acc-card acc-auth" id="accAuthCard">
+            <div class="acc-tabs" role="tablist" aria-label="Entrar ou criar conta">
+              <button type="button" class="acc-tab is-active" data-auth-tab="login" role="tab" aria-selected="true">Entrar</button>
+              <button type="button" class="acc-tab" data-auth-tab="register" role="tab" aria-selected="false">Criar conta</button>
+            </div>
+
+            <!-- ---------- login ---------- -->
+            <form class="acc-form" id="formLogin" novalidate autocomplete="on">
+              <label class="ck-field">
+                <span>E-mail</span>
+                <input type="email" id="loginEmail" autocomplete="email" placeholder="voce@email.com" required />
+                <small class="wl-error" id="loginEmailErr"></small>
+              </label>
+              <label class="ck-field">
+                <span>Senha</span>
+                <span class="acc-pass">
+                  <input type="password" id="loginPass" autocomplete="current-password" placeholder="Sua senha" required />
+                  <button type="button" class="acc-eye" data-eye="loginPass" aria-label="Mostrar senha">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3.2"/></svg>
+                  </button>
+                </span>
+                <small class="wl-error" id="loginPassErr"></small>
+              </label>
+              <label class="acc-check">
+                <input type="checkbox" id="loginRemember" checked />
+                <span>Manter conectado neste navegador</span>
+              </label>
+              <p class="acc-msg" id="loginMsg" role="status"></p>
+              <button class="btn btn-dark full" type="submit" id="loginBtn">Entrar <span class="arr">→</span></button>
+              <p class="acc-fine">Esqueceu a senha? <button class="acc-linkbtn" type="button" id="goRecover">Recuperar acesso</button></p>
+            </form>
+
+            <!-- ---------- cadastro ---------- -->
+            <form class="acc-form" id="formRegister" novalidate autocomplete="on" hidden>
+              <label class="ck-field">
+                <span>Nome completo</span>
+                <input type="text" id="regName" autocomplete="name" placeholder="Nome e sobrenome" required />
+                <small class="wl-error" id="regNameErr"></small>
+              </label>
+              <div class="acc-row">
+                <label class="ck-field">
+                  <span>E-mail</span>
+                  <input type="email" id="regEmail" autocomplete="email" placeholder="voce@email.com" required />
+                  <small class="wl-error" id="regEmailErr"></small>
+                </label>
+                <label class="ck-field">
+                  <span>WhatsApp <em>(opcional)</em></span>
+                  <input type="tel" id="regPhone" autocomplete="tel" placeholder="(11) 98765-4321" />
+                  <small class="wl-error" id="regPhoneErr"></small>
+                </label>
+              </div>
+              <div class="acc-row">
+                <label class="ck-field">
+                  <span>Senha</span>
+                  <span class="acc-pass">
+                    <input type="password" id="regPass" autocomplete="new-password" placeholder="Mínimo de 8 caracteres" required />
+                    <button type="button" class="acc-eye" data-eye="regPass" aria-label="Mostrar senha">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3.2"/></svg>
+                    </button>
+                  </span>
+                  <span class="acc-meter" aria-hidden="true"><i id="passBar"></i></span>
+                  <small class="acc-hint" id="passHint">Use 8+ caracteres, misturando letras, números e um símbolo.</small>
+                </label>
+                <label class="ck-field">
+                  <span>CPF <em>(opcional)</em></span>
+                  <input type="text" inputmode="numeric" id="regCpf" placeholder="000.000.000-00" />
+                  <small class="wl-error" id="regCpfErr"></small>
+                </label>
+              </div>
+              <label class="acc-check">
+                <input type="checkbox" id="regMarketing" />
+                <span>Quero receber novidades e ofertas (posso sair quando quiser)</span>
+              </label>
+              <p class="acc-msg" id="regMsg" role="status"></p>
+              <button class="btn btn-dark full" type="submit" id="regBtn">Criar minha conta <span class="arr">→</span></button>
+              <p class="acc-fine">Guardamos sua senha apenas como um código irreversível (PBKDF2-SHA256 com salt). Ninguém — nem nós — consegue ler a senha.</p>
+            </form>
+          </div>
+
+          <!-- ---------- recuperar acesso ---------- -->
+          <div class="acc-card acc-recover" id="accRecover" hidden>
+            <h2 class="acc-recover-title">Recuperar acesso</h2>
+            <p class="acc-note">Informe o e-mail da conta. Geramos um código de 6 dígitos com validade de 30 minutos.</p>
+
+            <form class="acc-form" id="formRecoverRequest" novalidate>
+              <label class="ck-field">
+                <span>E-mail da conta</span>
+                <input type="email" id="recEmail" autocomplete="email" placeholder="voce@email.com" />
+                <small class="wl-error" id="recEmailErr"></small>
+              </label>
+              <p class="acc-msg" id="recMsg" role="status"></p>
+              <div class="acc-actions">
+                <button class="btn btn-dark" type="submit" id="recSendBtn">Enviar código</button>
+                <button class="btn btn-ghost" type="button" id="recBack">Voltar para o login</button>
+              </div>
+            </form>
+
+            <form class="acc-form" id="formRecoverConfirm" hidden novalidate>
+              <div class="acc-code-box" id="recCodeBox" hidden>
+                <span class="acc-code-label">Código gerado (demonstração)</span>
+                <strong class="acc-code" id="recCode">······</strong>
+                <em>Em produção este código chega por e-mail — nada é mostrado na tela.</em>
+              </div>
+              <div class="acc-row">
+                <label class="ck-field">
+                  <span>Código de 6 dígitos</span>
+                  <input type="text" inputmode="numeric" id="recCodeIn" maxlength="6" placeholder="000000" />
+                  <small class="wl-error" id="recCodeErr"></small>
+                </label>
+                <label class="ck-field">
+                  <span>Nova senha</span>
+                  <input type="password" id="recNewPass" autocomplete="new-password" placeholder="Mínimo de 8 caracteres" />
+                  <span class="acc-meter" aria-hidden="true"><i id="recBar"></i></span>
+                  <small class="acc-hint" id="recHint"></small>
+                </label>
+              </div>
+              <p class="acc-msg" id="recConfirmMsg" role="status"></p>
+              <div class="acc-actions">
+                <button class="btn btn-dark" type="submit" id="recConfirmBtn">Trocar senha</button>
+              </div>
+            </form>
+          </div>
+
+          <aside class="acc-card acc-benefits">
+            <h2>Por que criar conta?</h2>
+            <ul class="acc-list">
+              <li><strong>Cartões salvos</strong><span>Escolha entre seus cartões em um toque no checkout. Guardamos só bandeira, banco, 4 últimos dígitos e validade.</span></li>
+              <li><strong>Entrega em 1 clique</strong><span>Seus endereços ficam prontos para as próximas compras.</span></li>
+              <li><strong>Histórico de pedidos</strong><span>Acompanhe status e reordene o que já gostou.</span></li>
+            </ul>
+            <div class="acc-secure-box">
+              <h3>Como protegemos seus dados</h3>
+              <ul>
+                <li>Senha com <strong>scrypt</strong> (servidor) ou <strong>PBKDF2 210k</strong> (local) + salt aleatório.</li>
+                <li>Cartão virando <strong>token</strong>: o número completo e o CVV nunca são gravados.</li>
+                <li>CPF guardado como <strong>hash</strong> com pepper — só os 3 últimos dígitos aparecem.</li>
+                <li>Sessão com token aleatório, expiração de 30 dias e comparação em tempo constante.</li>
+              </ul>
+            </div>
+          </aside>
+
+        </div>
+      </section>
+
+      <!-- ================= LOGADO: painel ================= -->
+      <section class="acc-panel" id="accPanel" hidden>
+        <div class="acc-hello">
+          <div>
+            <p class="eyebrow">Minha conta</p>
+            <h1 class="acc-title">Olá, <span id="accFirstName">—</span></h1>
+            <p class="acc-sub" id="accSince"></p>
+          </div>
+          <button class="btn btn-ghost" id="accLogout" type="button">Sair</button>
+        </div>
+
+        <nav class="acc-nav" aria-label="Seções da conta">
+          <button type="button" class="acc-nav-item is-active" data-panel="resumo">Resumo</button>
+          <button type="button" class="acc-nav-item" data-panel="dados">Meus dados</button>
+          <button type="button" class="acc-nav-item" data-panel="cartoes">Cartões</button>
+          <button type="button" class="acc-nav-item" data-panel="enderecos">Endereços</button>
+          <button type="button" class="acc-nav-item" data-panel="pedidos">Pedidos</button>
+          <button type="button" class="acc-nav-item" data-panel="seguranca">Segurança</button>
+        </nav>
+
+        <!-- resumo -->
+        <div class="acc-pane is-active" data-pane="resumo">
+          <div class="acc-stats">
+            <div class="acc-stat"><strong id="statCards">0</strong><span>cartões salvos</span></div>
+            <div class="acc-stat"><strong id="statAddr">0</strong><span>endereços</span></div>
+            <div class="acc-stat"><strong id="statOrders">0</strong><span>pedidos</span></div>
+          </div>
+          <div class="acc-quick" id="accQuickCards"></div>
+        </div>
+
+        <!-- dados -->
+        <div class="acc-pane" data-pane="dados">
+          <form class="acc-card acc-form" id="formProfile">
+            <h2>Meus dados</h2>
+            <div class="acc-row">
+              <label class="ck-field">
+                <span>Nome completo</span>
+                <input type="text" id="profName" autocomplete="name" />
+                <small class="wl-error" id="profNameErr"></small>
+              </label>
+              <label class="ck-field">
+                <span>WhatsApp</span>
+                <input type="tel" id="profPhone" autocomplete="tel" placeholder="(11) 98765-4321" />
+              </label>
+            </div>
+            <label class="ck-field">
+              <span>E-mail <em>(é o seu login)</em></span>
+              <input type="email" id="profEmail" disabled />
+            </label>
+            <label class="ck-field">
+              <span>CPF</span>
+              <input type="text" id="profCpf" disabled />
+            </label>
+            <label class="acc-check">
+              <input type="checkbox" id="profMarketing" />
+              <span>Quero receber novidades e ofertas</span>
+            </label>
+            <p class="acc-msg" id="profMsg" role="status"></p>
+            <div class="acc-actions">
+              <button class="btn btn-dark" type="submit" id="profBtn">Salvar alterações</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- cartões -->
+        <div class="acc-pane" data-pane="cartoes">
+          <div class="acc-card">
+            <h2>Meus cartões</h2>
+            <p class="acc-note">Os cartões aparecem em <strong>slots</strong>: toque para escolher qual usar. Crédito e débito ficam em trilhas separadas.</p>
+            <div class="acc-wallet" id="accWallet"></div>
+          </div>
+        </div>
+
+        <!-- endereços -->
+        <div class="acc-pane" data-pane="enderecos">
+          <div class="acc-card">
+            <h2>Endereços de entrega</h2>
+            <div class="acc-addr-list" id="accAddrList"></div>
+            <form class="acc-form acc-addr-form" id="formAddr" novalidate>
+              <h3>Adicionar endereço</h3>
+              <div class="acc-row">
+                <label class="ck-field"><span>Quem recebe</span><input type="text" id="adRecipient" placeholder="Nome de quem recebe" /><small class="wl-error" id="adRecipientErr"></small></label>
+                <label class="ck-field"><span>CEP</span><input type="text" inputmode="numeric" id="adCep" placeholder="00000-000" /><small class="wl-error" id="adCepErr"></small></label>
+              </div>
+              <div class="acc-row acc-row-3">
+                <label class="ck-field acc-grow"><span>Endereço</span><input type="text" id="adStreet" placeholder="Rua, avenida…" /><small class="wl-error" id="adStreetErr"></small></label>
+                <label class="ck-field acc-narrow"><span>Número</span><input type="text" inputmode="numeric" id="adNumber" placeholder="123" /><small class="wl-error" id="adNumberErr"></small></label>
+                <label class="ck-field acc-narrow"><span>UF</span><input type="text" maxlength="2" id="adState" placeholder="SP" /><small class="wl-error" id="adStateErr"></small></label>
+              </div>
+              <div class="acc-row">
+                <label class="ck-field"><span>Complemento <em>(opcional)</em></span><input type="text" id="adComplement" placeholder="Apto, bloco…" /></label>
+                <label class="ck-field"><span>Bairro</span><input type="text" id="adDistrict" placeholder="Seu bairro" /><small class="wl-error" id="adDistrictErr"></small></label>
+              </div>
+              <div class="acc-row">
+                <label class="ck-field"><span>Cidade</span><input type="text" id="adCity" placeholder="Cidade" /><small class="wl-error" id="adCityErr"></small></label>
+                <label class="ck-field"><span>WhatsApp <em>(opcional)</em></span><input type="tel" id="adPhone" placeholder="(11) 98765-4321" /></label>
+              </div>
+              <p class="acc-msg" id="addrMsg" role="status"></p>
+              <div class="acc-actions"><button class="btn btn-dark" type="submit" id="addrBtn">Salvar endereço</button></div>
+            </form>
+          </div>
+        </div>
+
+        <!-- pedidos -->
+        <div class="acc-pane" data-pane="pedidos">
+          <div class="acc-card">
+            <h2>Meus pedidos</h2>
+            <div class="acc-orders" id="accOrders"></div>
+          </div>
+        </div>
+
+        <!-- segurança -->
+        <div class="acc-pane" data-pane="seguranca">
+          <div class="acc-card acc-form">
+            <h2>Segurança</h2>
+            <form id="formPass" novalidate>
+              <div class="acc-row">
+                <label class="ck-field"><span>Senha atual</span><input type="password" id="curPass" autocomplete="current-password" /><small class="wl-error" id="curPassErr"></small></label>
+                <label class="ck-field"><span>Nova senha</span><input type="password" id="newPass" autocomplete="new-password" /><span class="acc-meter" aria-hidden="true"><i id="newBar"></i></span><small class="acc-hint" id="newHint"></small></label>
+              </div>
+              <p class="acc-msg" id="passMsg" role="status"></p>
+              <div class="acc-actions"><button class="btn btn-dark" type="submit" id="passBtn">Trocar senha</button></div>
+            </form>
+            <div class="acc-danger">
+              <h3>Seus dados</h3>
+              <p>Você pode baixar uma cópia dos seus dados ou apagar tudo o que guardamos.</p>
+              <div class="acc-actions">
+                <button class="btn btn-ghost sm" id="accExport" type="button">Baixar meus dados (JSON)</button>
+                <button class="btn btn-ghost sm danger" id="accDelete" type="button">Apagar minha conta</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="ck-footer">
+    <div class="wrap">
+      <span>© 2026 DAVVERO LIMONE · CNPJ 12.345.678/0001-90</span>
+      <span id="accFootNote"><a href="contato.html">Central de atendimento</a> · Ambiente demonstrativo — nenhuma cobrança é feita.</span>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"><span></span></div>
+
+  <script src="data.js"></script>
+  <script src="assets.js"></script>
+  <script src="pay-core.js"></script>
+  <script src="auth.js"></script>
+  <script src="wallet.js"></script>
+  <script src="conta.js"></script>
+  <script src="vendor/gsap.min.js"></script>
+  <script src="vendor/ScrollTrigger.min.js"></script>
+  <script src="theme.js"></script>
+  <script src="motion.js"></script>
+</body>
+</html>

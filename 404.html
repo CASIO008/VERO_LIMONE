@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Página não encontrada — DAVVERO LIMONE</title>
+  <style>
+    :root{ color-scheme:light dark; --cream:#FAF8F1; --ink:#191813; --limone:#E1EC2A; --soft:#57544A; }
+    @media (prefers-color-scheme: dark){ :root{ --cream:#100F0C; --ink:#F2EEE2; --soft:#ABA598; } }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    body{
+      min-height:100vh; display:grid; place-items:center;
+      padding:8vw; text-align:center;
+      background:var(--cream); color:var(--ink);
+      font-family:'Inter', ui-sans-serif, system-ui, sans-serif;
+    }
+    .code{
+      font-size:.78rem; font-weight:700; letter-spacing:.28em; text-transform:uppercase;
+      color:var(--soft);
+    }
+    h1{
+      font-size:clamp(2rem, 6vw, 3.4rem); line-height:1.05; letter-spacing:-.03em;
+      margin:.6rem 0 1rem;
+    }
+    p{ color:var(--soft); max-width:46ch; margin-inline:auto; line-height:1.6; }
+    .btn{
+      display:inline-flex; align-items:center; gap:.5em;
+      margin-top:1.8rem; padding:1em 1.8em; border-radius:999px;
+      background:var(--ink); color:var(--cream); text-decoration:none;
+      font-weight:600; font-size:.95rem;
+      transition:background-color .3s ease, color .3s ease;
+    }
+    .btn:hover{ background:var(--limone); color:#191813; }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="code">Erro 404</p>
+    <h1>Essa página saiu de linha.</h1>
+    <p>O endereço que você abriu não existe (ou mudou de lugar). Estamos te levando de volta para a loja.</p>
+    <a class="btn" id="back" href="#">Voltar para a loja <span aria-hidden="true">→</span></a>
+  </main>
+  <script>
+    (function () {
+      /* Em project sites o caminho é /NOME_DO_REPO/...; mantém o base certo. */
+      var parts = location.pathname.split('/').filter(Boolean);
+      var root = parts.length ? '/' + parts[0] + '/' : '/';
+      var back = document.getElementById('back');
+      back.href = root;
+      setTimeout(function () { location.replace(root); }, 2200);
+    })();
+  </script>
+</body>
+</html>
