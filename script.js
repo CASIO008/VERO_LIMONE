@@ -539,16 +539,17 @@ $('#newsForm').addEventListener('submit', e => {
 
 /* ---------------- loader ---------------- */
 (function loader() {
-  const MIN = 1600;
+  const MIN = 1200;
   const t0 = performance.now();
   let done = false;
 
-  /* limão em vídeo: roda no loader e substitui o símbolo quando pronto */
+  /* limão em vídeo: roda acelerado no loader e substitui o símbolo quando pronto */
   const video = $('.loader-lemon');
   if (video) {
     const ready = () => $('#loader').classList.add('video-ready');
     if (video.readyState >= 2) ready();
     else video.addEventListener('loadeddata', ready, { once: true });
+    video.playbackRate = 4;
     const p = video.play();
     if (p && p.catch) p.catch(() => {});
   }

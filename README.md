@@ -18,9 +18,11 @@ roda a cada `push` na branch `main` (ou manualmente em **Actions → Run workflo
    `fonts/`, `images/`, `vendor/`) e cria o `.nojekyll`;
 4. publica no GitHub Pages.
 
-**Na primeira vez**, confira em **Settings → Pages** que o **Source** está em
-**GitHub Actions**. O repositório precisa ser público (ou a conta ter GitHub
-Pro) para o Pages ficar disponível de graça.
+**Na primeira vez**, em **Settings → Pages** coloque o **Source** em
+**GitHub Actions** — é obrigatório: o token padrão do Actions não consegue
+criar o site, só publicar nele (se aparecer `Resource not accessible by
+integration`, é esse passo que falta). O repositório também precisa ser
+público (ou a conta ter GitHub Pro) para o Pages ficar disponível de graça.
 
 Depois do primeiro deploy, o link é sempre:
 

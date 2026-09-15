@@ -6,7 +6,8 @@
 #    https://casio008.github.io/VERO_LIMONE/
 #
 #  Primeira vez: em Settings → Pages, escolha "GitHub Actions"
-#  como Source (ou deixe que o passo configure-pages faça isso).
+#  como Source. É obrigatório: o token padrão do Actions não tem
+#  permissão de criar o site do Pages, apenas de publicar nele.
 #
 #  No Pages a loja roda no "modo local": conta, cartões, sacola e
 #  pedidos ficam no armazenamento do próprio navegador. O servidor
@@ -34,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Baixar o código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Checar o JavaScript (colisões de escopo)
         run: node tools/check-globals.js
@@ -55,10 +56,11 @@ jobs:
             ./ _site/
           touch _site/.nojekyll
 
+      # O Pages já precisa estar habilitado em Settings → Pages
+      # (Source: GitHub Actions). O token padrão do Actions não tem
+      # permissão para CRIAR o site, só para publicar nele.
       - name: Configurar o Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Enviar o artefato
         uses: actions/upload-pages-artifact@v3
