@@ -10,7 +10,6 @@ const pd = {
   color: null,
   size: 'M',
   qty: 1,
-  photo: 0,
   cart: loadCart()
 };
 
@@ -50,10 +49,11 @@ const productById = id => PRODUCTS.find(p => p.id === id);
 const sizesOf = p => (p.cat === 'acessorios' ? ['Único'] : SIZES);
 const defaultSize = p => (p.cat === 'acessorios' ? 'Único' : 'M');
 
-/* ---------------- galeria ----------------
-   Foto lateral (campanha/look) ao lado da foto do produto, no
-   espírito da PDP da Asteric. Produtos com 2ª foto usam a própria
-   foto; os demais ganham um visual de campanha por categoria.     */
+/* ---------------- galeria (carrossel infinito) ----------------
+   Uma foto por vez. A lista junta as fotos do produto à foto de
+   campanha da categoria (a antiga foto lateral) e o loop infinito
+   vem de clones do primeiro/último slide, com setas, miniaturas,
+   swipe e teclado.                                                 */
 const SIDE_LOOK = {
   camisetas:  'images/look-street-1.jpg',
   moletons:   'images/look-street-1.jpg',
@@ -64,42 +64,153 @@ const SIDE_LOOK = {
   acessorios: 'images/hero-person.png'
 };
 
+let pdPos = 1;      /* posição no track (1 = primeiro slide real) */
+let pdCount = 0;    /* total de slides reais */
+let pdBusy = false; /* trava durante a transição */
+
+function gallerySlides(p) {
+  const list = (p.photos || []).slice();
+  const side = SIDE_LOOK[p.cat];
+  if (side && !list.includes(side)) list.push(side);
+  return list;
+}
+
+function slideHTML(src, p, clone) {
+  return `<div class="pd-slide${p.fit === 'cover' ? ' fit-cover' : ''}${clone ? ' is-clone' : ''}"${clone ? ' aria-hidden="true"' : ''}>
+      <span class="pd-backdrop" style="--pd-bg:url('${src}')"></span>
+      <img class="pd-photo" src="${src}" alt="${clone ? '' : p.name}" decoding="async" draggable="false">
+    </div>`;
+}
+
+function setTrackPos(pos, animate) {
+  const track = $('#pdTrack');
+  if (!track) return;
+  track.style.transition = animate ? '' : 'none';
+  track.style.transform = `translate3d(${-pos * 100}%, 0, 0)`;
+  if (!animate) void track.offsetWidth; /* aplica o salto sem animar */
+}
+
+function syncGallery() {
+  if (!pdCount) return;
+  const real = ((pdPos - 1) % pdCount + pdCount) % pdCount;
+  const counter = $('#pdCounter');
+  if (counter) counter.textContent = `${real + 1} / ${pdCount}`;
+  $$('.pd-thumb').forEach((b, i) => b.classList.toggle('is-active', i === real));
+}
+
+function goSlide(step) {
+  if (pdCount < 2 || pdBusy) return;
+  pdBusy = true;
+  pdPos += step;
+  setTrackPos(pdPos, true);
+}
+
+function jumpTo(real) {
+  if (pdCount < 2 || pdBusy) return;
+  if (pdPos === real + 1) return; /* já está nesta foto */
+  pdPos = real + 1;
+  pdBusy = true;
+  setTrackPos(pdPos, true);
+}
+
+function onTrackEnd() {
+  if (pdPos === 0) { pdPos = pdCount; setTrackPos(pdPos, false); }
+  else if (pdPos === pdCount + 1) { pdPos = 1; setTrackPos(pdPos, false); }
+  pdBusy = false;
+  syncGallery();
+}
+
 function renderMedia() {
   const p = pd.product;
-  const stage = $('#pdStage');
+  const track = $('#pdTrack');
   const thumbs = $('#pdThumbs');
-  const side = $('#pdPaneSide');
-  const photos = p.photos || [];
+  const photos = gallerySlides(p);
+  pdCount = photos.length;
+  pdPos = 1;
+  pdBusy = false;
 
-  /* lado esquerdo: 2ª foto do produto ou visual de campanha */
-  const sideSrc = photos[1] || SIDE_LOOK[p.cat] || photos[0] || '';
-  side.innerHTML = sideSrc
-    ? `<img class="pd-side-photo" src="${sideSrc}" alt="${p.name} — visual DAVVERO LIMONE" loading="lazy" decoding="async">`
-    : `<span class="pd-side-mark" data-mark></span>`;
-
-  /* lado direito: a foto escolhida na miniatura */
   if (!photos.length) {
-    stage.style.removeProperty('--pd-bg');
-    stage.innerHTML = `<div class="pd-illustrated">${garmentSVG(p.type, CREAM_GARMENT)}</div>`;
+    track.innerHTML = `<div class="pd-slide is-illustrated"><div class="pd-illustrated">${garmentSVG(p.type, CREAM_GARMENT)}</div></div>`;
     thumbs.innerHTML = '';
+    $$('.pd-arrow').forEach(b => { b.hidden = true; });
+    const counter = $('#pdCounter');
+    if (counter) counter.textContent = '1 / 1';
+    setTrackPos(0, false);
     return;
   }
 
-  const src = photos[pd.photo] || photos[0];
-  /* fundo = a mesma foto ampliada e desfocada, então a peça inteira (contain)
-     encaixa sem emenda visível nas laterais */
-  stage.style.setProperty('--pd-bg', `url("${src}")`);
-  stage.innerHTML = `
-    <span class="pd-backdrop" aria-hidden="true"></span>
-    <img class="pd-photo${p.fit === 'cover' ? ' fit-cover' : ''}" src="${src}" alt="${p.name}" decoding="async">`;
+  /* clones nas pontas = rolagem infinita nos dois sentidos */
+  track.innerHTML =
+    slideHTML(photos[photos.length - 1], p, true) +
+    photos.map(ph => slideHTML(ph, p, false)).join('') +
+    slideHTML(photos[0], p, true);
+
   thumbs.innerHTML = photos.map((ph, i) =>
-    `<button class="pd-thumb${i === pd.photo ? ' is-active' : ''}" type="button" data-photo="${i}" aria-label="Ver foto ${i + 1}">
+    `<button class="pd-thumb${i === 0 ? ' is-active' : ''}" type="button" data-slide="${i}" aria-label="Ver foto ${i + 1}">
       <img src="${ph}" alt="" loading="lazy" decoding="async">
     </button>`).join('');
-  $$('.pd-thumb', thumbs).forEach(b => b.addEventListener('click', () => {
-    pd.photo = +b.dataset.photo;
-    renderMedia();
-  }));
+
+  $$('.pd-thumb', thumbs).forEach(b =>
+    b.addEventListener('click', () => jumpTo(+b.dataset.slide)));
+
+  $$('.pd-arrow').forEach(b => { b.hidden = pdCount < 2; });
+  setTrackPos(1, false);
+  syncGallery();
+}
+
+/* controles do carrossel: setas, teclado, swipe */
+function initCarousel() {
+  const carousel = $('#pdCarousel');
+  const track = $('#pdTrack');
+  if (!carousel || !track) return;
+
+  track.addEventListener('transitionend', e => {
+    if (e.propertyName === 'transform') onTrackEnd();
+  });
+
+  $('#pdPrev').addEventListener('click', () => goSlide(-1));
+  $('#pdNext').addEventListener('click', () => goSlide(1));
+
+  carousel.tabIndex = 0;
+  carousel.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); goSlide(-1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); goSlide(1); }
+  });
+
+  let down = false, startX = 0, dx = 0, pid = null;
+  track.addEventListener('pointerdown', e => {
+    if (pdCount < 2 || pdBusy) return;
+    down = true; startX = e.clientX; dx = 0; pid = e.pointerId;
+    track.classList.add('dragging');
+    try { track.setPointerCapture(pid); } catch (err) {}
+  });
+  track.addEventListener('pointermove', e => {
+    if (!down) return;
+    dx = e.clientX - startX;
+    if (Math.abs(dx) < 3) return;
+    e.preventDefault();
+    track.style.transition = 'none';
+    track.style.transform = `translate3d(calc(${-pdPos * 100}% + ${dx}px), 0, 0)`;
+  });
+  const endDrag = () => {
+    if (!down) return;
+    down = false;
+    track.classList.remove('dragging');
+    if (pid !== null) { try { track.releasePointerCapture(pid); } catch (err) {} pid = null; }
+    if (Math.abs(dx) > 46) {
+      pdBusy = true;
+      pdPos += dx < 0 ? 1 : -1;
+      dx = 0;
+      setTrackPos(pdPos, true);
+    } else {
+      dx = 0;
+      setTrackPos(pdPos, true);
+    }
+  };
+  track.addEventListener('pointerup', endDrag);
+  track.addEventListener('pointercancel', endDrag);
+  track.addEventListener('lostpointercapture', endDrag);
+  track.addEventListener('dragstart', e => e.preventDefault());
 }
 
 /* ---------------- informação ---------------- */
@@ -225,8 +336,28 @@ function relatedCard(p) {
   pd.size = preferredSize(p);
 
   renderMedia();
+  initCarousel();
   renderInfo();
   bumpBadge();
+
+  /* menu mobile (mesmo padrão das outras páginas) */
+  const burger = $('#burger');
+  const menu = $('#mobileMenu');
+  if (burger && menu) {
+    const toggle = force => {
+      const open = force !== undefined ? force : !menu.classList.contains('open');
+      menu.classList.toggle('open', open);
+      burger.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', String(open));
+      menu.setAttribute('aria-hidden', String(!open));
+      document.body.classList.toggle('no-scroll', open);
+    };
+    burger.addEventListener('click', () => toggle());
+    $$('a', menu).forEach(a => a.addEventListener('click', () => toggle(false)));
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && menu.classList.contains('open')) toggle(false);
+    });
+  }
 
   $('#pdRelated').innerHTML = relatedFor(p).map(relatedCard).join('');
 
@@ -243,6 +374,30 @@ function relatedCard(p) {
     pd.qty = Math.min(9, pd.qty + 1);
     $('#pdQtyVal').textContent = pd.qty;
   });
+
+  /* barra fixa de compra (celular): aparece quando o botão principal
+     sai da tela, para a ação de compra ficar sempre à mão             */
+  const buybar = $('#pdBuybar');
+  if (buybar) {
+    $('#pdBuybarPrice').textContent = brl(p.price);
+    $('#pdBuybarPix').textContent = `${brl(pixPrice(p.price))} no Pix`;
+    const addMain = $('#pdAdd');
+    if (addMain) {
+      /* mostra a barra quando o botão principal passa acima da tela */
+      const updateBuybar = () => {
+        const show = addMain.getBoundingClientRect().bottom < 0;
+        buybar.classList.toggle('show', show);
+        buybar.setAttribute('aria-hidden', String(!show));
+      };
+      window.addEventListener('scroll', updateBuybar, { passive: true });
+      window.addEventListener('resize', updateBuybar);
+      updateBuybar();
+    }
+    $('#pdBuybarAdd').addEventListener('click', () => {
+      rememberSize(p.cat, pd.size);
+      addToCart(p.id, pd.color, pd.size, pd.qty);
+    });
+  }
 
   /* tabela de medidas */
   const sizeModal = $('#sizeModal');

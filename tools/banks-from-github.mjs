@@ -8,6 +8,9 @@
 
    Onde não existe arquivo (next, iti, will, nomad, digio, bndes…) o
    pay-core.js continua desenhando o selo inline — nada quebra.
+   O inter fica de fora de propósito: o SVG do repositório traz só o
+   monograma "in", então o selo inline (tile laranja com "inter") fica
+   mais fiel à marca.
 
    Uso:  node tools/banks-from-github.mjs
    ========================================================================== */
@@ -27,7 +30,6 @@ const BANKS = {
   santander:   'Banco Santander Brasil S.A/banco-santander-logo.svg',
   btg:         'Banco BTG Pacutal/btg-pactual.svg',
   safra:       'Banco Safra S.A/logo-safra.svg',
-  inter:       'Banco Inter S.A/inter.svg',
   original:    'Banco Original S.A/banco-original-logo-verde.svg',
   c6:          'Banco C6 S.A/c6 bank.svg',
   pagbank:     'PagSeguro Internet S.A/logo-pagbank.svg',

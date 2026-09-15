@@ -134,7 +134,7 @@ function refresh() {
 function renderQuickCards() {
   const box = el('accQuickCards');
   if (!box) return;
-  const cards = VLAuth.wallet.slice(0, 3);
+  const cards = VLAuth.wallet.slice(0, 3).map(c => VLPAY.normalizeCard(c));
   if (!cards.length) {
     box.innerHTML = `<div class="acc-empty">
       <p>Você ainda não tem cartões salvos. Adicione um para agilizar o checkout.</p>
@@ -162,6 +162,7 @@ function mountWallet() {
   if (!walletMounted) {
     VLWallet.mount(host, {
       allowManage: true, allowSave: true, showInstallments: false, allowKindSwitch: true,
+      showPreview: false,
       onChange: () => { el('statCards').textContent = VLAuth.wallet.length; },
     });
     walletMounted = true;

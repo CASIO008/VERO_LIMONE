@@ -33,7 +33,7 @@ const VLWallet = (() => {
     showInstallments: false,
     total: 0,
     selectedId: null,
-    form: { number: '', holder: '', exp: '', cvv: '', cpf: '', save: true },
+    form: { number: '', holder: '', exp: '', cvv: '', cpf: '', bank: '', save: true },
     problems: {},
     installments: 1,
     formOpen: false,
@@ -53,26 +53,54 @@ const VLWallet = (() => {
 
   /* cartões salvos + o cartão da sessão (visitante ou "não salvar").
      O de sessão vive só na memória: nunca vai para o armazenamento. */
-  const savedCards = () => (window.VLAuth ? VLAuth.wallet.filter(c => c.kind === state.kind) : []);
-  const guestCard = () => (state.guestTokenCard && state.guestTokenCard.kind === state.kind ? state.guestTokenCard : null);
+  const savedCards = () => (window.VLAuth ? VLAuth.wallet.filter(c => c.kind === state.kind).map(c => VLPAY.normalizeCard(c)) : []);
+  const guestCard = () => (state.guestTokenCard && state.guestTokenCard.kind === state.kind ? VLPAY.normalizeCard(state.guestTokenCard) : null);
   const cards = () => {
     const g = guestCard();
     return g ? savedCards().concat([{ ...g, kind: state.kind }]) : savedCards();
   };
   const isGuestCard = id => !!(guestCard() && guestCard().id === id);
   const cardOf = id => cards().find(c => c.id === id) || null;
-  const hasAnyCard = () => cards().length > 0;
 
   /* limpa os campos do cartão (o PAN não fica na memória depois de usar) */
   function resetFormFields() {
-    state.form = { number: '', holder: '', exp: '', cvv: '', cpf: '', save: state.form.save };
+    state.form = { number: '', holder: '', exp: '', cvv: '', cpf: '', bank: '', save: state.form.save };
+  }
+
+  /* banco reconhecido pelo número; a escolha manual só entra quando o BIN
+     não identifica sozinho (o número sempre tem a palavra final) */
+  const formBank = () => window.VLPAY.detectBank(state.form.number)
+    || (state.form.bank ? window.VLPAY.BANKS[state.form.bank] || null : null);
+
+  function bankOptions(selected = '') {
+    const banks = Object.values(window.VLPAY.BANKS).sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+    return `<option value=""${selected ? '' : ' selected'}>Selecione o banco…</option>`
+      + banks.map(b => `<option value="${esc(b.id)}"${b.id === selected ? ' selected' : ''}>${esc(b.name)}</option>`).join('');
   }
 
   /* ------------------------------------------------------ trilha de slots */
+  /* cartão sendo digitado: vive na trilha enquanto o formulário está aberto
+     (a carteira não duplica a arte num painel grande ao lado) */
+  function draftSlotHTML() {
+    const P = window.VLPAY;
+    const f = state.form;
+    const brand = P.detectBrand(f.number);
+    const bank = formBank();
+    const number = P.digits(f.number).length >= 2 ? f.number : '';
+    return `<div class="wl-slot wl-slot--draft is-active" data-draft role="presentation">
+        ${P.cardArt({ brand, bank, number, holder: f.holder, exp: f.exp || 'MM/AA', kind: state.kind, compact: true })}
+        <span class="wl-slot-cap">Novo cartão</span>
+      </div>`;
+  }
+
+  /* a arte digitada só vira slot próprio na carteira da conta (sem o
+     painel de pré-visualização); no checkout o painel grande continua */
+  const draftInRail = () => state.formOpen && opts.showPreview === false;
+
   function railHTML() {
     const list = cards();
     const items = list.map((c, i) => {
-      const active = c.id === state.selectedId;
+      const active = c.id === state.selectedId && !state.formOpen;
       const guest = isGuestCard(c.id) || c.guest === true;
       const tag = guest ? 'Não salvo' : (c.isDefault ? 'Principal' : '');
       return `<button type="button" class="wl-slot${active ? ' is-active' : ''}${guest ? ' is-guest' : ''}" role="radio"
@@ -85,12 +113,12 @@ const VLWallet = (() => {
           </span>
         </button>`;
     });
-    const add = `<button type="button" class="wl-slot wl-slot--add${state.formOpen ? ' is-active' : ''}"
+    const add = draftInRail() ? draftSlotHTML() : `<button type="button" class="wl-slot wl-slot--add${state.formOpen ? ' is-active' : ''}"
                     data-add role="radio" aria-checked="${state.formOpen}" aria-label="Adicionar novo cartão">
         <span class="wl-add-plus" aria-hidden="true">+</span>
         <span class="wl-add-text">${list.length ? 'Outro cartão' : 'Novo cartão'}</span>
       </button>`;
-    const dots = list.length > 1
+    const dots = list.length > 1 && !draftInRail()
       ? `<div class="wl-dots" role="tablist" aria-label="Cartões salvos">
            ${list.map((c, i) => `<button type="button" class="wl-dot${c.id === state.selectedId ? ' is-active' : ''}" data-dot="${esc(c.id)}" role="tab" aria-selected="${c.id === state.selectedId}" aria-label="Cartão ${i + 1}"></button>`).join('')}
          </div>`
@@ -104,6 +132,7 @@ const VLWallet = (() => {
      Com o formulário fechado, mostra o cartão escolhido; enquanto o
      usuário digita, mostra o cartão sendo montado em tempo real.        */
   function previewHTML() {
+    if (opts.showPreview === false) return '';
     const P = window.VLPAY;
     const f = state.form;
     const chosen = (!state.formOpen && !state.busy) ? cardOf(state.selectedId) : null;
@@ -120,19 +149,32 @@ const VLWallet = (() => {
           </div>
           <div class="wl-recognize" data-recognize>
             <span class="wl-chip-brand">${P.brandLogo(chosen.brandId, 26)}<em>${esc(chosen.brandName)}</em></span>
-            ${chosen.bankId ? `<span class="wl-chip-bank">${P.bankLogo(chosen.bankId, 26)}<em>${esc(chosen.bankName)}</em></span>` : ''}
+            ${chosen.bankId ? `<span class="wl-chip-bank"><em>${esc(chosen.bankName)}</em></span>` : ''}
           </div>
         </div>`;
     }
+    /* aba sem nenhum cartão: mesmo formato da aba com cartões — painel do
+       lado direito no lugar do formulário, que só abre ao tocar em adicionar */
+    if (!state.formOpen && !cards().length) {
+      const kindWord = state.kind === 'debit_card' ? 'débito' : 'crédito';
+      return `<div class="wl-preview wl-preview--chosen wl-preview--empty" data-preview>
+          <div class="wl-chosen">
+            <span class="wl-chosen-label">Nenhum cartão de ${kindWord}</span>
+            <strong>Adicione um cartão para pagar com ${kindWord}</strong>
+            <em>Guardamos só a bandeira, o banco, os 4 últimos dígitos e a validade.</em>
+          </div>
+          <button type="button" class="btn btn-ghost sm" data-add>Adicionar cartão</button>
+        </div>`;
+    }
     const brand = P.detectBrand(f.number);
-    const bank = P.detectBank(f.number);
+    const bank = formBank();
     const number = P.digits(f.number).length >= 2 ? f.number : '';
     return `<div class="wl-preview" data-preview>
         ${P.cardArt({ brand, bank, number, holder: f.holder, exp: f.exp || 'MM/AA', kind: state.kind })}
         <div class="wl-recognize" data-recognize>
           ${P.digits(f.number).length >= 4 ? `
             <span class="wl-chip-brand">${P.brandLogo(brand.id, 26)}<em>${esc(brand.name)}</em></span>
-            ${bank ? `<span class="wl-chip-bank">${P.bankLogo(bank, 26)}<em>${esc(bank.name)}</em></span>` : '<span class="wl-chip-bank is-empty"><em>banco não identificado</em></span>'}
+            ${bank ? `<span class="wl-chip-bank"><em>${esc(bank.name)}</em></span>` : '<span class="wl-chip-bank is-empty"><em>banco não identificado</em></span>'}
           ` : '<span class="wl-chip-hint">Digite o número e a bandeira aparece sozinha</span>'}
         </div>
       </div>`;
@@ -143,7 +185,7 @@ const VLWallet = (() => {
     const P = window.VLPAY;
     const card = cardOf(state.selectedId);
     const list = cards();
-    const showForm = state.formOpen || !list.length;
+    const showForm = state.formOpen;
     const tabs = `<div class="wl-tabs" role="tablist" aria-label="Tipo de cartão">
         ${[['credit_card', 'Crédito'], ['debit_card', 'Débito']].map(([id, label]) => `
           <button type="button" class="wl-tab${state.kind === id ? ' is-active' : ''}" data-kind="${id}"
@@ -153,8 +195,16 @@ const VLWallet = (() => {
       </div>`;
 
     const guest = card ? isGuestCard(card.id) : false;
+    const bankFix = (!showForm && card && !guest && state.allowManage && !card.bankId) ? `
+      <label class="wl-bank-fix">
+        <span class="wl-bank-fix-label">Banco do cartão <em>não identificamos pelo número</em></span>
+        <span class="wl-bank-fix-field">
+          <select data-bank-fix="${esc(card.id)}" aria-label="Informar o banco emissor">${bankOptions('')}</select>
+        </span>
+      </label>` : '';
     const actions = (!showForm && card) ? `
       <div class="wl-actions">
+        ${bankFix}
         ${guest
           ? '<span class="wl-actions-note">Cartão usado só nesta compra — não fica guardado.</span>'
           : (state.allowManage && !card.isDefault ? `<button type="button" class="btn btn-ghost sm" data-default="${esc(card.id)}">Tornar principal</button>` : '')}
@@ -171,9 +221,16 @@ const VLWallet = (() => {
     const f = state.form;
     const P = window.VLPAY;
     const brand = P.detectBrand(f.number);
+    const detected = P.detectBank(f.number);
+    const bank = detected || (f.bank ? P.BANKS[f.bank] || null : null);
     const cvvLen = brand.cvv.length === 1 ? brand.cvv[0] : (brand.id === 'amex' ? 4 : 3);
     const logged = window.VLAuth && VLAuth.logged;
     const err = k => state.problems[k] ? `<small class="wl-error">${esc(state.problems[k])}</small>` : '';
+    const bankField = `
+        <div class="ck-field wl-field-bank" data-bank-field${(detected || P.digits(f.number).length < 4) ? ' hidden' : ''}>
+          <span>Banco emissor <em>(não identificamos pelo número)</em></span>
+          <select data-input="bank" aria-label="Banco emissor do cartão">${bankOptions(f.bank)}</select>
+        </div>`;
     const installments = state.showInstallments && state.kind === 'credit_card' ? `
       <label class="ck-field wl-field-inst">
         <span>Parcelas</span>
@@ -190,6 +247,7 @@ const VLWallet = (() => {
           </div>
           ${err('number')}
         </div>
+        ${bankField}
         <div class="ck-field wl-field-holder${state.problems.holder ? ' is-invalid' : ''}">
           <span>Nome impresso no cartão</span>
           <input type="text" data-input="holder" value="${esc(f.holder)}" placeholder="COMO ESTÁ NO CARTÃO"
@@ -230,7 +288,7 @@ const VLWallet = (() => {
           <span>Ambiente seguro · o número completo e o CVV <strong>não são guardados</strong>.</span>
         </div>
         <div class="wl-form-actions">
-          ${cards().length ? '<button type="button" class="btn btn-ghost" data-cancel>Cancelar</button>' : ''}
+          <button type="button" class="btn btn-ghost" data-cancel>Cancelar</button>
           <button type="button" class="btn btn-dark" data-submit ${state.busy ? 'disabled' : ''}>
             ${state.busy ? 'Processando…' : (cards().length ? 'Adicionar cartão' : 'Adicionar cartão')}
           </button>
@@ -274,11 +332,12 @@ const VLWallet = (() => {
     state.total = Number(options.total || 0);
     listeners.clear();
     if (options.onChange) listeners.add(options.onChange);
-    /* escolhe o padrão da trilha — e só abre o formulário se não houver
-       nenhum cartão (salvo ou da sessão) para escolher */
+    /* escolhe o padrão da trilha; o formulário só abre sozinho quando a
+       tela pede (checkout) — na conta a aba abre com a trilha, que é onde
+       o cartão (salvo ou sendo digitado) vive */
     if (!state.selectedId) autoSelect();
-    if (options.openForm === true) state.formOpen = true;
-    else if (hasAnyCard()) state.formOpen = false;
+    state.formOpen = options.openForm === true
+      || (options.openFormWhenEmpty === true && !cards().length);
     render();
     if (!authBound && window.VLAuth) {
       authBound = true;
@@ -289,10 +348,10 @@ const VLWallet = (() => {
 
   function syncSelection() {
     const list = cards();
-    if (state.selectedId && !list.some(c => c.id === state.selectedId)) {
+    if (!list.length) { state.selectedId = null; return; }
+    if (!state.selectedId || !list.some(c => c.id === state.selectedId)) {
       const def = list.find(c => c.isDefault) || list[0];
       state.selectedId = def ? def.id : null;
-      if (!state.selectedId) state.formOpen = true;
     }
   }
 
@@ -301,14 +360,14 @@ const VLWallet = (() => {
     const list = cards();
     const def = list.find(c => c.isDefault) || list[0];
     state.selectedId = def ? def.id : null;
-    state.formOpen = !def;
     return def;
   }
 
   function render() {
     if (!root) return;
     const scrollLeft = (() => { const r = $('[data-rail]', root); return r ? r.scrollLeft : 0; })();
-    root.innerHTML = `<div class="wl" data-kind="${state.kind}">${panelHTML()}${previewHTML()}</div>`;
+    const solo = opts.showPreview === false ? ' wl--solo' : '';
+    root.innerHTML = `<div class="wl${solo}" data-kind="${state.kind}">${panelHTML()}${previewHTML()}</div>`;
     bind();
     const rail = $('[data-rail]', root);
     if (rail && scrollLeft) rail.scrollLeft = scrollLeft;
@@ -329,8 +388,15 @@ const VLWallet = (() => {
     const f = state.form;
     const brand = P.detectBrand(f.number);
     const cvvLen = brand.cvv.length === 1 ? brand.cvv[0] : (brand.id === 'amex' ? 4 : 3);
+    const draft = $('[data-draft]', root);
+    if (draft) draft.outerHTML = draftSlotHTML();
     const prev = $('[data-preview]', root);
     if (prev) prev.outerHTML = previewHTML();
+    const bankField = $('[data-bank-field]', root);
+    if (bankField) {
+      const known = !!P.detectBank(f.number);
+      bankField.hidden = known || !(P.digits(f.number).length >= 4 || f.bank);
+    }
     const numBrand = $('[data-num-brand]', root);
     if (numBrand) numBrand.innerHTML = P.digits(f.number).length >= 2 ? P.brandLogo(brand.id, 28) : '';
     const cvv = $('[data-input="cvv"]', root);
@@ -368,6 +434,7 @@ const VLWallet = (() => {
       if (state.lockedKind || tab.classList.contains('is-active')) return;
       state.kind = tab.dataset.kind;
       state.installments = 1;
+      state.formOpen = false;
       autoSelect();
       render();
       if (opts.onKindChange) opts.onKindChange(state.kind);
@@ -389,8 +456,12 @@ const VLWallet = (() => {
         if (e.key === 'ArrowLeft' && i > 0) { e.preventDefault(); slots[i - 1].focus(); slots[i - 1].click(); }
       });
     });
-    const add = $('[data-add]', root);
-    if (add) add.addEventListener('click', () => { state.formOpen = true; render(); const n = $('[data-input="number"]', root); if (n) n.focus(); });
+    $$('[data-add]', root).forEach(btn => btn.addEventListener('click', () => {
+      state.formOpen = true;
+      render();
+      const n = $('[data-input="number"]', root);
+      if (n) n.focus();
+    }));
 
     $$('[data-dot]', root).forEach(dot => dot.addEventListener('click', () => {
       state.selectedId = dot.dataset.dot; state.formOpen = false; render();
@@ -405,6 +476,14 @@ const VLWallet = (() => {
       try { await VLAuth.setDefaultCard(btn.dataset.default); } catch (e) { toast(e.message); }
       render();
     }));
+    const bankFix = $('[data-bank-fix]', root);
+    if (bankFix) bankFix.addEventListener('change', async () => {
+      if (!bankFix.value || !window.VLAuth) return;
+      bankFix.disabled = true;
+      try { await VLAuth.setCardBank(bankFix.dataset.bankFix, bankFix.value); toast('Banco do cartão atualizado.'); }
+      catch (e) { toast(e.message || 'Não foi possível atualizar o banco.'); }
+      render();
+    });
     $$('[data-remove]', root).forEach(btn => btn.addEventListener('click', async () => {
       const id = btn.dataset.remove;
       /* cartão da sessão: basta esquecer (nada foi guardado) */
@@ -462,6 +541,12 @@ const VLWallet = (() => {
 
     const save = $('[data-input="save"]', root);
     if (save) save.addEventListener('change', () => { state.form.save = save.checked; emit(); });
+    const bankSel = $('[data-input="bank"]', root);
+    if (bankSel) bankSel.addEventListener('change', () => {
+      state.form.bank = bankSel.value;
+      updateLive();
+      emit();
+    });
     const inst = $('[data-input="installments"]', root);
     if (inst) inst.addEventListener('change', () => { state.installments = Number(inst.value) || 1; emit(); });
 
@@ -500,7 +585,12 @@ const VLWallet = (() => {
     state.busy = true;
     render();
     try {
-      const payload = { kind: state.kind, number: P.digits(f.number), holder: f.holder, exp: f.exp, cvv: P.digits(f.cvv), cpf: P.digits(f.cpf) };
+      const detected = P.detectBank(f.number);
+      const payload = {
+        kind: state.kind, number: P.digits(f.number), holder: f.holder, exp: f.exp,
+        cvv: P.digits(f.cvv), cpf: P.digits(f.cpf),
+        bankId: detected ? null : (f.bank || null),
+      };
       const last4 = P.digits(payload.number).slice(-4);
       if (window.VLAuth && VLAuth.logged && state.form.save && state.allowSave) {
         const out = await VLAuth.saveCard(payload);
@@ -521,7 +611,7 @@ const VLWallet = (() => {
         /* visitante (ou "não salvar"): guarda só o suficiente para a compra,
            aqui na memória — nada vai para o armazenamento do navegador */
         const brand = P.detectBrand(payload.number);
-        const bank = P.detectBank(payload.number);
+        const bank = P.detectBank(payload.number) || (payload.bankId ? P.BANKS[payload.bankId] : null);
         state.guestTokenCard = {
           id: 'guest_' + Math.random().toString(16).slice(2),
           kind: state.kind, brandId: brand.id, brandName: brand.name,
@@ -566,7 +656,7 @@ const VLWallet = (() => {
     reset() { resetFormFields(); state.problems = {}; state.guestTokenCard = null; state.selectedId = null; render(); },
     refresh() { syncSelection(); render(); },
     setTotal(v) { state.total = Number(v || 0); if (root) render(); },
-    setKind(kind) { state.kind = kind; state.selectedId = null; state.formOpen = !cards().length; render(); },
+    setKind(kind) { state.kind = kind; state.selectedId = null; state.formOpen = false; syncSelection(); render(); },
     get state() { return sel(); },
     _internal: state,
   };

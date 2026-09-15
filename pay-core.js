@@ -245,6 +245,33 @@ const VLPAY = (() => {
     return null;
   }
 
+  /* ---------------------------------------------------- normalização
+     Cartão salvo (local ou servidor) chega em formatos diferentes.
+     Aqui vira sempre { brandId, brandName, bankId, bankName } no plano,
+     e o banco é reconhecido de novo pelo bin6 quando ficou em branco —
+     conserta cartões guardados antes de a bandeira existir. */
+  function normalizeCard(card) {
+    if (!card) return card;
+    const brandId = card.brandId
+      || (typeof card.brand === 'string' ? card.brand : card.brand && card.brand.id)
+      || null;
+    const brandName = card.brandName
+      || (card.brand && card.brand.name)
+      || (BRANDS[brandId] && BRANDS[brandId].name)
+      || 'Cartão';
+    let bankId = card.bankId
+      || (typeof card.bank === 'string' ? card.bank : card.bank && card.bank.id)
+      || null;
+    if (!bankId && card.bin6) {
+      const found = detectBank(card.bin6);
+      if (found) bankId = found.id;
+    }
+    const bankName = bankId
+      ? (card.bankName || (card.bank && card.bank.name) || (BANKS[bankId] && BANKS[bankId].name) || null)
+      : null;
+    return { ...card, brandId, brandName, bankId, bankName };
+  }
+
   /* ---------------------------------------------------------- formatação */
   function formatNumber(value, brand = detectBrand(value)) {
     const d = digits(value).slice(0, Math.max(...brand.lengths));
@@ -406,7 +433,7 @@ const VLPAY = (() => {
     if (!bank) return '';
     /* tile 60x60 oficial baixado do Figma */
     if (hasAsset('banks', bank.id)) return assetImg('banks', bank.id, size, size);
-    return SVGO(bankGlyph(bank).replace(/^<rect width="36" height="36" rx="10"/, '<rect class="bico-bg" width="36" height="36" rx="10'), size);
+    return SVGO(bankGlyph(bank).replace(/^<rect width="36" height="36" rx="10"/, '<rect class="bico-bg" width="36" height="36" rx="10"'), size);
   };
 
   /* --------------------------------------------------------------- badges
@@ -574,7 +601,8 @@ const VLPAY = (() => {
     const gradA = bankHex ? bankHex : pal[0];
     const gradB = bankHex ? darkenHex(bankHex, .4) : (pal[1] || pal[0]);
     const onLight = bankHex ? isLightHex(bankHex) : false;
-    const issuer = bank ? `<span class="vlcc-bank">${bankLogo(bank, 40)}</span>` : '';
+    /* nome do banco em tipografia limpa: sem chapa/selo de fundo no cartão */
+    const issuer = bank ? `<span class="vlcc-bank"><em>${escapeHTML(bank.name)}</em></span>` : '';
     return `<div class="vlcc${o.compact ? ' vlcc--compact' : ''}${bank ? ' vlcc--known' : ''}${onLight ? ' vlcc--onlight' : ''}" data-brand="${brand.id}" data-bank="${bank ? bank.id : ''}"
       style="--cc-a:${gradA};--cc-b:${gradB};--cc-t:${pal[0]};--cc-fg:${onLight ? '#191813' : '#FFFFFF'}">
       ${chipDefs(uid)}
@@ -602,7 +630,7 @@ const VLPAY = (() => {
   return {
     BRANDS, BRAND_ORDER, BANKS, BIN_BANK, METHODS, ASSETS, ACCEPTED_BRANDS,
     digits, luhn, escapeHTML, clamp, hasAsset, assetSrc, assetImg,
-    detectBrand, detectBank, matchRange,
+    detectBrand, detectBank, matchRange, normalizeCard,
     formatNumber, maskNumber, maskNumberBrand, formatExp, formatCvv, formatHolder, maxNumberLength,
     validateNumber, validateHolder, validateExp, validateCvv, cardProblems,
     brandLogo, bankLogo, cardArt, methodById, brandStrip,

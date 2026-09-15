@@ -48,7 +48,7 @@
         <div class="loader-mark" data-mark></div>
         <video class="loader-lemon" src="images/lemon-load.mp4" autoplay muted loop playsinline aria-hidden="true"></video>
       </div>
-      <p class="loader-word">DAVVERO&nbsp;LIMONE</p>
+      <p class="loader-word"><img class="loader-logo" src="images/logo-limone.png" alt="DAVVERO LIMONE" width="924" height="425" decoding="async" /></p>
     </div>
   </div>
 
@@ -204,7 +204,7 @@
         </div>
       </div>
 
-      <div class="wrap">
+      <div class="wrap-about">
         <ul class="stats reveal" aria-label="Números da marca">
           <li><strong data-count="38" data-suffix="k+">0</strong><span>clientes satisfeitos</span></li>
           <li><strong data-count="4.9" data-decimals="1">0</strong><span>nota média de avaliação</span></li>
@@ -215,8 +215,6 @@
     </section>
 
     <!-- ============ DEGRADÊ PARA A FAIXA ============ -->
-    <div class="to-black" aria-hidden="true"></div>
-
     <!-- ============ MARQUEE ============ -->
     <div class="marquee" aria-hidden="true">
       <div class="marquee-track">
@@ -572,6 +570,35 @@
       <p class="cart-note">Frete e cupons calculados no checkout. Pix com 5% de desconto.</p>
     </footer>
   </aside>
+
+  <!-- ============ POP-UP DO LOOK ============ -->
+  <div class="modal look-modal" id="lookModal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Peças do look">
+    <div class="look-card">
+      <button class="icon-x modal-close" id="lookClose" aria-label="Fechar">✕</button>
+
+      <figure class="look-media" id="lookMedia"></figure>
+
+      <div class="look-info">
+        <p class="eyebrow">Lookbook 2026</p>
+        <h3 class="look-title" id="lookTitle">Look</h3>
+        <p class="look-sub" id="lookSub"></p>
+        <p class="look-desc" id="lookDesc"></p>
+
+        <div class="look-pieces" id="lookPieces"></div>
+
+        <div class="look-foot">
+          <span class="look-total">
+            <span>Peças do look · <em id="lookCount"></em></span>
+            <strong id="lookTotal">R$ 0,00</strong>
+          </span>
+          <div class="look-actions">
+            <a class="btn btn-ghost" id="lookFull" href="look.html">Ver look completo</a>
+            <button class="btn btn-dark" id="lookAddAll" type="button">Adicionar o look</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ============ TOAST ============ -->
   <div class="toast" id="toast" role="status" aria-live="polite"><span></span></div>

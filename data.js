@@ -88,16 +88,12 @@ function attachMarks() {
   });
 }
 
-/* ---------------- marca oficial (lockup tipográfico) ----------------
-   Lockup em HTML/CSS: DAVVERO grande, LIMONE deslocado ao lado e
-   "street basics" abaixo. Usa a fonte Futura Renner do projeto,
-   então o texto flui sozinho e fica legível em qualquer tamanho.  */
+/* ---------------- marca oficial (lockup em PNG) ----------------
+   Wordmark DAVVERO LIMONE em PNG com fundo transparente. O tom
+   acompanha o tema via CSS (filter:invert) — escuro no claro,
+   claro no escuro — sem depender da fonte local.                 */
 function brandLockupHTML() {
-  return `<span class="lk-row">
-      <span class="lk-vero">DAVVERO</span>
-      <span class="lk-limone">LIMONE</span>
-    </span>
-    <span class="lk-sub">street basics</span>`;
+  return `<img class="lockup-img" src="images/logo-limone.png" alt="DAVVERO LIMONE" width="924" height="425" decoding="async">`;
 }
 function attachLockups() {
   $$('[data-lockup]').forEach(el => {

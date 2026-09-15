@@ -43,11 +43,14 @@
       </div>
     </div>
     <div class="wrap ck-header-inner ck-header--center">
-      <nav class="pd-nav" aria-label="Navegação">
-        <a href="index.html#colecao">Coleção</a>
-        <a href="index.html#categorias">Categorias</a>
-        <a href="index.html#sobre">Sobre</a>
-      </nav>
+      <div class="pd-head-left">
+        <nav class="pd-nav" aria-label="Navegação">
+          <a href="index.html#colecao">Coleção</a>
+          <a href="index.html#categorias">Categorias</a>
+          <a href="index.html#sobre">Sobre</a>
+        </nav>
+        <button class="burger" id="burger" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span></button>
+      </div>
       <a class="brand brand--center" href="index.html" aria-label="DAVVERO LIMONE — voltar para a loja">
         <span class="brand-mark" data-mark></span>
         <span class="brand-lockup" data-lockup></span>
@@ -70,15 +73,42 @@
     </div>
   </header>
 
+  <!-- ============ MOBILE MENU ============ -->
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div class="mobile-mark" data-mark></div>
+    <nav aria-label="Menu">
+      <a href="index.html">Início</a>
+      <a href="homem.html">Masculino</a>
+      <a href="mulher.html">Feminino</a>
+      <a href="index.html#colecao">Coleção</a>
+      <a href="index.html#lookbook">Lookbook</a>
+      <a href="sobre.html">Sobre</a>
+      <a href="conta.html">Minha conta</a>
+      <a href="contato.html">Contato</a>
+    </nav>
+    <div class="mobile-foot">
+      <span>@davverolimone</span>
+      <span>street basics · masculino e feminino</span>
+    </div>
+  </div>
+
   <main class="pd-main" id="pdMain">
     <div class="pd-shell">
-      <!-- ---------- GALERIA: foto lateral + produto ---------- -->
+      <!-- ---------- GALERIA: carrossel horizontal infinito ---------- -->
       <div class="pd-media">
-        <figure class="pd-pane pd-pane--side" id="pdPaneSide"></figure>
-        <figure class="pd-pane pd-pane--main">
-          <div class="pd-stage" id="pdStage" aria-live="polite"></div>
+        <div class="pd-carousel" id="pdCarousel" role="group" aria-roledescription="carrossel" aria-label="Fotos do produto">
+          <div class="pd-track" id="pdTrack" aria-live="polite"></div>
+
+          <button class="pd-arrow pd-arrow--prev" id="pdPrev" type="button" aria-label="Foto anterior">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+          </button>
+          <button class="pd-arrow pd-arrow--next" id="pdNext" type="button" aria-label="Próxima foto">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+          <span class="pd-counter" id="pdCounter">1 / 1</span>
+
           <div class="pd-thumbs" id="pdThumbs" role="group" aria-label="Fotos do produto"></div>
-        </figure>
+        </div>
       </div>
 
       <!-- ---------- INFO ---------- -->
@@ -156,6 +186,15 @@
       </section>
     </div>
   </main>
+
+  <!-- ============ BARRA DE COMPRA (MOBILE) ============ -->
+  <div class="pd-buybar" id="pdBuybar" aria-hidden="true">
+    <span class="pd-buybar-price">
+      <strong id="pdBuybarPrice">R$ 0,00</strong>
+      <em id="pdBuybarPix"></em>
+    </span>
+    <button class="btn btn-dark" id="pdBuybarAdd" type="button">Adicionar ao carrinho</button>
+  </div>
 
   <!-- ============ TABELA DE MEDIDAS ============ -->
   <div class="modal" id="sizeModal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Guia de medidas">

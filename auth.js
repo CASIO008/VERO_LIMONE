@@ -290,7 +290,9 @@ const VLAuth = (() => {
   async function localSaveCard(user, input) {
     const P = window.VLPAY;
     const brand = P.detectBrand(input.number);
-    const bank = P.detectBank(input.number);
+    /* banco reconhecido pelo número; se o cliente escolheu um no formulário,
+       a escolha vale quando o BIN não identifica sozinho */
+    const bank = P.detectBank(input.number) || (input.bankId && P.BANKS[input.bankId]) || null;
     const pan = digits(input.number);
     const problems = P.cardProblems({ ...input, brand });
     if (Object.keys(problems).length) {
@@ -537,6 +539,25 @@ const VLAuth = (() => {
     state.wallet = localWallet(state.user); emit();
   }
 
+  /* escolhe/conserta o banco de um cartão quando o BIN não identifica */
+  async function setCardBank(id, bankId) {
+    if (!state.user) return;
+    if (state.mode === 'server') {
+      const out = await api('PATCH', `/api/payment-methods/${encodeURIComponent(id)}/bank`, { bankId: bankId || null });
+      state.wallet = out.wallet || []; emit(); return;
+    }
+    const P = window.VLPAY;
+    const db = readDb();
+    const card = db.cards.find(c => c.id === id && c.userId === state.user.id);
+    if (!card) return;
+    const bank = bankId ? P.BANKS[bankId] : null;
+    card.bankId = bank ? bank.id : null;
+    card.bankName = bank ? bank.name : null;
+    card.label = `${card.brandName}${card.bankName ? ' ' + card.bankName : ''} •••• ${card.last4}`;
+    audit(db, 'card.bank', { id, bank: card.bankId }); writeDb(db);
+    state.wallet = localWallet(state.user); emit();
+  }
+
   async function saveAddress(input) {
     if (!state.user) throw new Error('Entre na sua conta para salvar o endereço.');
     if (state.mode === 'server') {
@@ -747,7 +768,7 @@ const VLAuth = (() => {
     register, login, logout, updateProfile, changePassword,
     requestPasswordReset, confirmPasswordReset,
     /* pagamentos */
-    saveCard, removeCard, setDefaultCard, saveAddress, removeAddress,
+    saveCard, removeCard, setDefaultCard, setCardBank, saveAddress, removeAddress,
     createOrder, loadOrders, deleteAccount,
     /* utilidades expostas */
     passwordStrength, passwordProblem, makeCredential, checkCredential, pbkdf2,

@@ -215,6 +215,33 @@ SCENARIOS.conta = async () => {
   check('painel da conta aparece', await evaluate(`return !document.getElementById('accPanel').hidden`));
   await shot('conta-logada');
 
+  /* aba sem cartões abre no formato da de crédito: trilha com o card de
+     adicionar, sem formulário e sem painel duplicado à direita */
+  await evaluate(`goPanel('cartoes'); return true`);
+  await settle(400);
+  check('aba sem cartões não abre o formulário', await evaluate(`
+    return !document.querySelector('#accWallet [data-form]') && !!document.querySelector('#accWallet .wl-slot--add[data-add]');
+  `));
+  check('carteira da conta não duplica o cartão à direita', await evaluate(`
+    return !document.querySelector('#accWallet .wl-preview');
+  `));
+  await evaluate(`document.querySelector('#accWallet .wl-slot--add[data-add]').click(); return true`);
+  await settle(300);
+  check('card de adicionar abre o formulário', await evaluate(`return !!document.querySelector('#accWallet [data-form] [data-input="number"]')`));
+  check('cartão digitado vira slot na trilha', await evaluate(`
+    const input = document.querySelector('#accWallet [data-input="number"]');
+    input.value = '5162 3060 0000 0004';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    const draft = document.querySelector('#accWallet [data-draft] .vlcc');
+    return !!draft && draft.dataset.brand === 'mastercard' && draft.dataset.bank === 'nubank' && !document.querySelector('#accWallet .wl-preview');
+  `));
+  await evaluate(`document.querySelector('#accWallet [data-cancel]').click(); return true`);
+  await settle(250);
+  check('cancelar volta para o card de adicionar', await evaluate(`
+    return !document.querySelector('#accWallet [data-form]') && !!document.querySelector('#accWallet .wl-slot--add[data-add]');
+  `));
+  await shot('conta-cartoes-vazio');
+
   /* cartões: dois válidos + um duplicado */
   const card = async (number, kind, cvv) => evaluate(`
     (async () => {
@@ -269,6 +296,38 @@ SCENARIOS.conta = async () => {
     })()
   `);
   check('troca de cartão principal funciona', def === 1, 'padrões de débito: ' + def);
+
+  /* banco informado à mão (BIN fora da tabela) e conserto depois */
+  const manual = await evaluate(`
+    (async () => {
+      await VLAuth.saveCard({ kind:'credit_card', number:'5555667777889910', holder:'ANA SOUZA', exp:'12/30', cvv:'123', bankId:'inter' });
+      const c = VLAuth.wallet.find(x => x.last4 === '9910');
+      return { bankId: c && c.bankId, bankName: c && c.bankName };
+    })()
+  `);
+  check('banco escolhido à mão é guardado', manual.bankId === 'inter' && manual.bankName === 'Inter', JSON.stringify(manual));
+
+  const fixed = await evaluate(`
+    (async () => {
+      await VLAuth.saveCard({ kind:'credit_card', number:'5555667777889928', holder:'ANA SOUZA', exp:'12/30', cvv:'123' });
+      const c = VLAuth.wallet.find(x => x.last4 === '9928');
+      const antes = c.bankId;
+      await VLAuth.setCardBank(c.id, 'inter');
+      const depois = VLAuth.wallet.find(x => x.id === c.id);
+      return { antes, depoisId: depois.bankId, depoisNome: depois.bankName };
+    })()
+  `);
+  check('setCardBank corrige o banco de um cartão salvo', fixed.antes === null && fixed.depoisId === 'inter' && fixed.depoisNome === 'Inter', JSON.stringify(fixed));
+
+  check('cartão mostra o banco (nome limpo) no slot', await evaluate(`
+    (() => {
+      VLWallet.setKind('credit_card');
+      const art = document.querySelector('#accWallet .vlcc[data-bank="inter"]');
+      const mark = art && art.querySelector('.vlcc-bank em, .vlcc-bank svg, .vlcc-bank img');
+      return !!(mark && /inter/i.test(mark.textContent || mark.getAttribute('alt') || ''));
+    })()
+  `));
+  await shot('conta-cartoes-banco');
 
   /* endereço */
   const addr = await evaluate(`

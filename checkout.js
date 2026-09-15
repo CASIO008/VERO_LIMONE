@@ -483,6 +483,7 @@ function renderPayPanel() {
         allowManage: true,
         allowSave: true,
         showInstallments: ck.pay === 'credit_card',
+        openFormWhenEmpty: true,
         total: cardTotal,
         onChange: st => { ck.wallet = st; renderSummary(); },
         onToast: toast,

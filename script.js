@@ -317,15 +317,105 @@ function toast(msg) {
 }
 
 /* ---------------- lookbook ---------------- */
-/* os looks vivem em data.js (LOOKS) — cada card abre a página do look */
+/* os looks vivem em data.js (LOOKS) — cada card abre um pop-up com
+   as peças do look, com opção de ver o produto ou adicionar.       */
 function renderLookbook() {
   const track = $('#lbTrack');
   if (!track) return;
   track.innerHTML = LOOKS.map(l => `
-    <a class="lb-item" href="look.html?id=${l.id}" aria-label="${l.title}: ${l.sub}">
+    <button class="lb-item" type="button" data-look="${l.id}" aria-label="Ver as peças do ${l.title}: ${l.sub}">
       <img src="${l.img}" alt="${l.sub}" loading="lazy" decoding="async">
-      <div class="lb-cap">${l.title}<span>${l.sub}</span></div>
-    </a>`).join('');
+      <span class="lb-cap">${l.title}<span>${l.sub}</span></span>
+      <span class="lb-open">Ver peças</span>
+    </button>`).join('');
+}
+
+/* ---------------- pop-up do look ---------------- */
+function initLookModal() {
+  const modal = $('#lookModal');
+  const track = $('#lbTrack');
+  if (!modal || !track) return;
+
+  const media = $('#lookMedia');
+  const piecesBox = $('#lookPieces');
+  const addAllBtn = $('#lookAddAll');
+  let current = null;
+  let lastFocus = null;
+
+  const colorOf = p => (p.colors && p.colors[0]) || 'preto';
+
+  function pieceRow(p) {
+    const photo = p.photos && p.photos[0];
+    const url = `produto.html?id=${encodeURIComponent(p.id)}`;
+    return `<div class="look-piece">
+      <a class="look-thumb" href="${url}" aria-label="Ver ${p.name}">
+        ${photo ? `<img src="${photo}" alt="${p.name}" loading="lazy" decoding="async">` : ''}
+      </a>
+      <div class="look-piece-info">
+        <span class="look-piece-cat">${CAT_LABEL[p.cat] || ''}</span>
+        <a class="look-piece-name" href="${url}">${p.name}</a>
+        <span class="look-piece-meta">${p.colorLabel ? p.colorLabel + ' · ' : ''}${p.meta || ''}</span>
+      </div>
+      <div class="look-piece-side">
+        <strong class="look-piece-price">${brl(p.price)}</strong>
+        <span class="look-piece-btns">
+          <a class="look-mini" href="${url}">Ver</a>
+          <button class="look-mini look-mini--add" type="button" data-add-piece="${p.id}">Adicionar</button>
+        </span>
+      </div>
+    </div>`;
+  }
+
+  function open(id) {
+    const look = lookById(id);
+    if (!look) return;
+    const pieces = look.pieces.map(productById).filter(Boolean);
+    current = { look, pieces };
+
+    media.innerHTML = `<img src="${look.img}" alt="${look.title} — ${look.sub}" decoding="async">`;
+    $('#lookTitle').textContent = look.title;
+    $('#lookSub').textContent = look.sub;
+    $('#lookDesc').textContent = look.desc;
+    $('#lookCount').textContent = `${pieces.length} ${pieces.length === 1 ? 'peça' : 'peças'}`;
+    $('#lookTotal').textContent = brl(pieces.reduce((sum, p) => sum + p.price, 0));
+    $('#lookFull').href = `look.html?id=${encodeURIComponent(look.id)}`;
+    piecesBox.innerHTML = pieces.map(pieceRow).join('');
+
+    $$('[data-add-piece]', piecesBox).forEach(btn => btn.addEventListener('click', () => {
+      const p = productById(btn.dataset.addPiece);
+      if (p) addToCart(p.id, colorOf(p), preferredSize(p), 1, true);
+    }));
+
+    lastFocus = document.activeElement;
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('no-scroll');
+    $('#lookClose').focus();
+  }
+
+  function close() {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('no-scroll');
+    current = null;
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  $$('.lb-item', track).forEach(card =>
+    card.addEventListener('click', () => open(card.dataset.look)));
+
+  $('#lookClose').addEventListener('click', close);
+  modal.addEventListener('click', e => { if (e.target === modal) close(); });
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape' || !modal.classList.contains('open')) return;
+    close();
+  });
+
+  addAllBtn.addEventListener('click', () => {
+    if (!current) return;
+    current.pieces.forEach(p => addToCart(p.id, colorOf(p), preferredSize(p), 1, true));
+    toast(`${current.pieces.length} peças do ${current.look.title} foram para o carrinho`);
+  });
 }
 function lbScroll(dir) {
   const track = $('#lbTrack');
@@ -404,21 +494,16 @@ function renderInstagram() {
   if (btn) btn.addEventListener('click', () => toast('Nosso Instagram está chegando — em breve!'));
 }
 
-/* ---------------- header / progress ---------------- */
+/* ---------------- header / progress ----------------
+   O header fica sempre visível (menu fixo): nada de esconder ao rolar.
+   Só troca o fundo conforme o scroll e o tema da vitrine.           */
 const header = $('#header');
-let lastY = window.scrollY;
 
 window.addEventListener('scroll', () => {
   const y = window.scrollY;
   header.classList.toggle('scrolled', y > 24);
   const billboard = $('.billboard');
   header.classList.toggle('over-media', !!billboard && y < billboard.offsetHeight - 96);
-  if (y > lastY && y > 380 && !$('#mobileMenu').classList.contains('open')) {
-    header.classList.add('hidden');
-  } else {
-    header.classList.remove('hidden');
-  }
-  lastY = y;
 
   const h = document.documentElement.scrollHeight - window.innerHeight;
   $('#progressBar').style.width = (h > 0 ? Math.min(100, (y / h) * 100) : 0) + '%';
@@ -636,4 +721,5 @@ renderCats();
 syncCollection();
 renderCart();
 renderLookbook();
+initLookModal();
 renderInstagram();

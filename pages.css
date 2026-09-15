@@ -482,4 +482,16 @@
     align-items:center;
     justify-content:space-between;
   }
+  .lk-piece-side .btn{ min-height:42px; }
+
+  /* totais do look fixos no rodapé do celular */
+  .lk-total{
+    position:sticky;
+    bottom:0;
+    z-index:5;
+    border-radius:18px 18px 0 0;
+    padding-bottom:calc(1.1rem + env(safe-area-inset-bottom));
+  }
+  .lk-total .btn{ width:100%; }
+  .lk-others-head{ flex-direction:column; align-items:flex-start; gap:.4rem; }
 }

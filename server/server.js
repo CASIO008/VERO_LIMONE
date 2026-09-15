@@ -26,6 +26,7 @@
      POST   /api/vault/tokenize           { number, holder, expMonth, expYear, cvv, kind }
      POST   /api/payment-methods/card     tokeniza e salva
      POST   /api/payment-methods/:id/default
+     PATCH  /api/payment-methods/:id/bank  corrige o banco emissor
      DELETE /api/payment-methods/:id
      POST   /api/addresses                GET /api/addresses · DELETE /api/addresses/:id
      POST   /api/orders                   { items, shipping, totals, payment, address }
@@ -338,7 +339,7 @@ const BANK_NAMES = {
 };
 
 /* tokeniza SEM guardar nada: é o que um PSP faria (Stripe/Pagar.me…) */
-function tokenizeCard({ number, holder, expMonth, expYear, cvv, kind = 'credit_card' }) {
+function tokenizeCard({ number, holder, expMonth, expYear, cvv, kind = 'credit_card', bankId: chosenBankId }) {
   const pan = digitsOnly(number);
   const bin = binLookup(pan);
   const brandId = detectBrand(pan, bin);
@@ -356,6 +357,9 @@ function tokenizeCard({ number, holder, expMonth, expYear, cvv, kind = 'credit_c
   if (!new RegExp(`^\\d{${needCvv}}$`).test(String(cvv || ''))) problems.push(`CVV deve ter ${needCvv} dígitos.`);
   if (problems.length) return { ok: false, problems };
 
+  /* BIN manda; a escolha do cliente só vale quando o BIN não identifica */
+  const bankId = (bin && bin.bank_id) || (chosenBankId && BANK_NAMES[chosenBankId] ? chosenBankId : null);
+
   return {
     ok: true,
     card: {
@@ -366,8 +370,8 @@ function tokenizeCard({ number, holder, expMonth, expYear, cvv, kind = 'credit_c
       last4: pan.slice(-4),
       brandId,
       brandName: BRAND_NAMES[brandId] || 'Cartão',
-      bankId: bin?.bank_id || null,
-      bankName: BANK_NAMES[bin?.bank_id] || null,
+      bankId,
+      bankName: bankId ? BANK_NAMES[bankId] : null,
       expMonth: m, expYear: y,
       holder: holder.trim().slice(0, 60),
       isDebit,
@@ -706,6 +710,26 @@ async function api(req, res, url) {
     db.prepare('UPDATE payment_methods SET is_default = 0 WHERE user_id = ? AND kind = ?').run(s.user_id, pm.kind);
     db.prepare('UPDATE payment_methods SET is_default = 1 WHERE id = ?').run(pm.id);
     audit(req, 'card.default', { actor: 'user:' + s.public_id, entityId: pid });
+    return json(res, 200, { ok: true, wallet: walletFor(s.user_id) });
+  }
+
+  /* -------- carteira: corrigir o banco emissor (BIN não identificado) -------- */
+  if (req.method === 'PATCH' && /^\/api\/payment-methods\/[^/]+\/bank$/.test(url.pathname)) {
+    const s = currentSession(req);
+    if (!s) return fail(res, 401, 'no_session', 'Sessão expirada.');
+    if (!csrfOk(req)) return fail(res, 403, 'csrf', 'Requisição bloqueada por segurança.');
+    const pid = url.pathname.split('/')[3];
+    const pm = db.prepare('SELECT id FROM payment_methods WHERE public_id = ? AND user_id = ?').get(pid, s.user_id);
+    if (!pm) return fail(res, 404, 'not_found', 'Cartão não encontrado.');
+    const body = await readBody(req);
+    const bankId = body.bankId && BANK_NAMES[body.bankId] ? body.bankId : null;
+    const bankName = bankId ? BANK_NAMES[bankId] : null;
+    const card = db.prepare('SELECT brand_name, last4 FROM cards WHERE payment_method_id = ?').get(pm.id);
+    if (!card) return fail(res, 404, 'not_found', 'Cartão não encontrado.');
+    db.prepare('UPDATE cards SET bank_id = ?, bank_name = ? WHERE payment_method_id = ?').run(bankId, bankName, pm.id);
+    db.prepare('UPDATE payment_methods SET label = ? WHERE id = ?')
+      .run(`${card.brand_name}${bankName ? ' ' + bankName : ''} •••• ${card.last4}`, pm.id);
+    audit(req, 'card.bank', { actor: 'user:' + s.public_id, entityId: pid, meta: { bank: bankId } });
     return json(res, 200, { ok: true, wallet: walletFor(s.user_id) });
   }
 
